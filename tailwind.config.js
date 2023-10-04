@@ -6,11 +6,13 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Roboto', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+                
             },
             colors: {
                 'primary': '#FF0000',
                 'background': '#F7F7F7',
+                'input': '#F2F2F2',
             }
         },
     },

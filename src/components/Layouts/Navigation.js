@@ -17,28 +17,28 @@ const Navigation = ({ user }) => {
     return (
         <nav className="bg-white border-b border-gray-100 shadow-md">
             {/* Primary Navigation Menu */}
-            <div className="max-w-7xl mx-7 my-4 px-4 sm:px-6 lg:px-0">
+            <div className="max-w-7xl mx-7 my-1 px-4 sm:px-6 lg:px-0">
                 <div className="flex justify-between h-16">
                     <div className="flex items-center">
                         {/* Logo */}
                         <div className="flex-shrink-0 mr-10">
                             <Link href="/dashboard">
-                                <Image src={logo} alt="Logo" width={150} height={40} />
+                                <Image src={logo} alt="Logo" width={100} height={40} />
                             </Link>
                         </div>
 
                         {/* Navigation Links */}
-                        <div className="hidden sm:flex space-x-4 ml-2">
+                        <div className="hidden sm:flex space-x-4 ml-2 text-sm">
                             <NavLink href="/dashboard" active={router.pathname === '/dashboard'}>
-                                Dashboard
+                                <p>Dashboard</p>
                             </NavLink>
                             <NavLink href="/siswa" active={router.pathname === '/siswa'}>
-                                Siswa
+                                <p>Siswa</p>
                                 <div className="ml-1 pt-1">
-                                <svg className="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                                </svg>
-                            </div>
+                                    <svg className="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                                    </svg>
+                                </div>
                             </NavLink>
                         </div>
                     </div>
@@ -46,7 +46,7 @@ const Navigation = ({ user }) => {
 
                     {/* Settings Dropdown */}
                     <div className="hidden sm:flex items-center ml-6">
-                        <Dropdown align="right" width="48" trigger={<button className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition duration-150 ease-in-out">
+                        <Dropdown align="right" width="10" trigger={<button className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition duration-150 ease-in-out">
                             <div>{user?.name}</div>
                             <div className="ml-1">
                                 <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -55,7 +55,26 @@ const Navigation = ({ user }) => {
                             </div>
                         </button>}>
                             {/* Authentication */}
-                            <DropdownButton onClick={logout}>Logout</DropdownButton>
+                            <DropdownButton onClick={logout} className="flex items-center ">
+                                <div className="flex items-center mx-3 my-2 text-sm text text-gray-500 hover:text-gray-700">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="currentColor"
+                                        class="w-6 h-6"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+                                        />
+                                    </svg>
+                                    <span className="ml-2 text-sm mx-2">Logout</span>
+                                </div>
+                            </DropdownButton>
+
                         </Dropdown>
                     </div>
 
@@ -106,8 +125,11 @@ const Navigation = ({ user }) => {
                         </div>
 
                         <div className="mt-3 space-y-1">
-                            {/* Authentication */}
-                            <ResponsiveNavButton onClick={logout}>Logout</ResponsiveNavButton>
+                            <ResponsiveNavButton onClick={logout}>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                                </svg>
+                            </ResponsiveNavButton>
                         </div>
                     </div>
                 </div>
