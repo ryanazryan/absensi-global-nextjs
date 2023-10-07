@@ -11,7 +11,7 @@ import Image from 'next/image';
 
 const Navigation = ({ user }) => {
     const router = useRouter();
-    const { logout } = useAuth();
+    const { logout } = useAuth(user);
     const [open, setOpen] = useState(false);
 
     return (
@@ -46,7 +46,7 @@ const Navigation = ({ user }) => {
 
                     {/* Settings Dropdown */}
                     <div className="hidden sm:flex items-center ml-6">
-                        <Dropdown align="right" width="10" trigger={<button className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition duration-150 ease-in-out">
+                        <Dropdown align="right" width="10" trigger={<button className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 bg focus:outline-none transition duration-150 ease-in-out">
                             <div>{user?.name}</div>
                             <div className="ml-1">
                                 <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -124,11 +124,25 @@ const Navigation = ({ user }) => {
                             </div>
                         </div>
 
-                        <div className="mt-3 space-y-1">
+                        <div className="mt-3 space-y-1 flex items-center">
                             <ResponsiveNavButton onClick={logout}>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-                                </svg>
+                                <div className="flex items-center my-2 text-sm text text-gray-500 hover:text-gray-700">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="currentColor"
+                                        class="w-6 h-6"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+                                        />
+                                    </svg>
+                                    <span className="ml-2 text-sm mx-2">Logout</span>
+                                </div>
                             </ResponsiveNavButton>
                         </div>
                     </div>
