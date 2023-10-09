@@ -40,14 +40,15 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         setErrors([])
         setStatus(null)
 
-        axios
-            .post('/login', props)
-            .then(() => mutate())
-            .catch(error => {
-                if (error.response.status !== 422) throw error
-
-                setErrors(error.response.data.errors)
-            })
+        try {
+            const response = await axios.post('/login', props);
+            const userData = response.data;
+            userData.role_id = response.data.role_id;
+            mutate(userData); 
+        } catch (error) {
+            if (error.response.status !== 422) throw error;
+            setErrors(error.response.data.errors);
+        }
     }
 
     const forgotPassword = async ({ setErrors, setStatus, email }) => {
