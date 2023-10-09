@@ -1,9 +1,5 @@
 import Input from '@/components/Input';
 import { motion } from 'framer-motion';
-import ApplicationLogo from '@/components/ApplicationLogo'
-import AuthSessionStatus from '@/components/AuthSessionStatus'
-import Label from '@/components/Label'
-import InputError from '@/components/InputError'
 import { useAuth } from '@/hooks/auth';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -11,9 +7,6 @@ import bg from '../../public/images/bg.jpg';
 import Image from 'next/image';
 import logo from '../../public/images/logo2.png'
 import GuestLayout from '@/components/Layouts/GuestLayout';
-import AuthCard from '@/components/AuthCard';
-import Link from 'next/link'
-import Button from '@/components/Button';
 
 const Login = () => {
     const router = useRouter();
@@ -97,20 +90,23 @@ const Login = () => {
                                 />
                             </div>
 
-                            {/* Checkbox 'Remember Me' */}
-                            <div className='mb-5'>
-                                <label className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        className="mr-2"
-                                        value=""
-                                        id="rememberMe"
-                                        onChange={() => setShouldRemember(!shouldRemember)}
-                                    />
-                                    <span className="text-gray-600">Remember me</span>
+                            <div className="mb-5 flex items-center">
+                                <label className="flex items-center cursor-pointer">
+                                    <span className="text-gray-700">
+                                        Remember me
+                                    </span>
+                                    <div className={`relative ml-2 w-10 h-5 rounded-full ${shouldRemember ? 'bg-red-500' : 'bg-input'} transition-all duration-300 ease-in-out`}>
+                                        <input
+                                            type="checkbox"
+                                            className="hidden"
+                                            id="rememberMe"
+                                            name="remember"
+                                            onChange={() => setShouldRemember(!shouldRemember)}
+                                        />
+                                        <div className={`absolute w-5 h-5 rounded-full bg-white shadow-md transition-transform duration-300 ease-in-out transform ${shouldRemember ? 'translate-x-full' : ''}`}></div>
+                                    </div>
                                 </label>
                             </div>
-
                             {/* Tombol Sign In */}
                             <div className="mt-5 flex">
                                 <button

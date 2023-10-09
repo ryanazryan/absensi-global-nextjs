@@ -36,6 +36,15 @@ function DashboardPage() { // Rename the component to "DashboardPage"
         // Set loading menjadi true saat mengambil data
         setLoading(true);
 
+        const laravelSessionCookie = document.cookie
+            .split('; ')
+            .find(cookie => cookie.startsWith('laravel_session='));
+
+        if (laravelSessionCookie) {
+            const token = laravelSessionCookie.split('=')[1];
+            console.log(token); // Token autentikasi Sanctum
+        }
+
         const checkScreenSize = () => {
             setIsSmallerScreen(window.innerWidth <= 500); // Ganti 640 dengan lebar layar yang sesuai
         };
@@ -92,7 +101,7 @@ function DashboardPage() { // Rename the component to "DashboardPage"
         <section className="py-1">
             <div className="w-full mb-12 xl:mb-0 px-4 mx-auto mt-5">
                 <div className='flex items-center'>
-                    <LengthMenu  totalEntries={kegiatan.length}/>
+                    <LengthMenu totalEntries={kegiatan.length} />
                     <SearchBar />
                 </div>
                 <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-md rounded mt-8">
@@ -105,16 +114,16 @@ function DashboardPage() { // Rename the component to "DashboardPage"
                                 <div className="flex-grow">
 
                                     <button className="bg-background hover:bg-gray-200 hover:ease-in text-dark active:bg-red-500 px-4 py-2 text-sm rounded-lg shadow-md mr-3 outline-none focus:outline-none ease-linear transition-all duration-150 flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 mr-2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 mr-2">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
                                         </svg>
                                         Export
                                     </button>
                                 </div>
                                 <div className="flex-grow">
                                     <button className="bg-primary hover:bg-red-600 text-white active:bg-red-500 px-4 py-2 text-sm rounded-lg shadow-md mr-3 outline-none focus:outline-none ease-linear transition-all duration-150 flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
                                         </svg>
 
                                         Tambah Kegiatan
@@ -133,40 +142,40 @@ function DashboardPage() { // Rename the component to "DashboardPage"
                                     <th className="px-6 align-middle border border-solid py-3 text-xs border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                         <div className="flex items-center">
                                             No
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-3 h-3 ml-1">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-3 h-3 ml-1">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
                                             </svg>
                                         </div>
                                     </th>
                                     <th className="px-6 align-middle border border-solid py-3 text-xs border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                         <div className="flex items-center">
                                             Nama Kegiatan
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-3 h-3 ml-1">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-3 h-3 ml-1">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
                                             </svg>
                                         </div>
                                     </th>
                                     <th className="px-6 align-middle border border-solid py-3 text-xs border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                         <div className="flex items-center">
                                             Waktu Kegiatan
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-3 h-3 ml-1">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-3 h-3 ml-1">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
                                             </svg>
                                         </div>
                                     </th>
                                     <th className="px-6 align-middle border border-solid py-3 text-xs border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                         <div className="flex items-center">
                                             Partisipasi Kelas
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-3 h-3 ml-1">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-3 h-3 ml-1">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
                                             </svg>
                                         </div>
                                     </th>
                                     <th className="px-6 align-middle border border-solid py-3 text-xs border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                         <div className="flex items-center">
                                             Total Kehadiran
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-3 h-3 ml-1">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-3 h-3 ml-1">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
                                             </svg>
                                         </div>
                                     </th>
@@ -188,7 +197,7 @@ function DashboardPage() { // Rename the component to "DashboardPage"
                                         <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap  text-left'>{item.total_kehadiran} Siswa</td>
                                         <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap text-left'>
                                             <button>
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 0100 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
                                                 </svg>
                                             </button>
@@ -303,4 +312,4 @@ function DashboardPage() { // Rename the component to "DashboardPage"
     );
 }
 
-export default DashboardPage; // Update the export statement
+export default DashboardPage;
