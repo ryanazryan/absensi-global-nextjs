@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SearchBar from './SearchBar';
 import LengthMenu from './LengthMenu';
+import axiosInstance from '@/lib/axios';
 
 function DashboardPage() { // Rename the component to "DashboardPage"
     const [kegiatan, setKegiatan] = useState([]);
@@ -50,37 +51,28 @@ function DashboardPage() { // Rename the component to "DashboardPage"
         };
 
         // Make a GET request to your Laravel API endpoint
-        fetch('http://localhost:8000/api/kegiatan')
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`Network response was not ok, status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setKegiatan(data);
-                // Simulasikan loading yang lebih lama dengan setTimeout
-                setTimeout(() => {
-                    setLoading(false); // Set loading menjadi false setelah data berhasil dimuat
-                }, 300); // Ganti angka ini dengan durasi yang diinginkan (dalam milidetik)
-            })
-            .catch((error) => {
-                setError(error.message);
-                // Simulasikan loading yang lebih lama dengan setTimeout
-                setTimeout(() => {
-                    setLoading(false); // Set loading menjadi false jika terjadi kesalahan
-                }, 300); // Ganti angka ini dengan durasi yang diinginkan (dalam milidetik)
-                console.error('Error fetching data:', error);
-            });
-
-        checkScreenSize();
-        window.addEventListener('resize', checkScreenSize);
-
-        // Membersihkan event listener saat komponen dibongkar
-        return () => {
-            window.removeEventListener('resize', checkScreenSize);
-        };
-
+        axiosInstance.get('/api/kegiatan')
+        .then((response) => {
+          setKegiatan(response.data);
+          setTimeout(() => {
+            setLoading(false);
+          }, 300);
+        })
+        .catch((error) => {
+          setError(error.message);
+          setTimeout(() => {
+            setLoading(false);
+          }, 300);
+          console.error('Error fetching data:', error);
+        });
+  
+      checkScreenSize();
+      window.addEventListener('resize', checkScreenSize);
+  
+      return () => {
+        window.removeEventListener('resize', checkScreenSize);
+      };
+  
     }, []);
 
     if (loading) {

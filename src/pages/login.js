@@ -1,30 +1,33 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import Image from 'next/image';
-import logo from '../../public/images/logo2.png';
-import bg from '../../public/images/bg.jpg';
-import GuestLayout from '@/components/Layouts/GuestLayout';
-import { useAuth } from '@/hooks/auth';
-import { motion } from 'framer-motion';
-import Input from '@/components/Input';
+import { useState } from 'react'
+import { useRouter } from 'next/router'
+import Image from 'next/image'
+import logo from '../../public/images/logo2.png'
+import bg from '../../public/images/bg.jpg'
+import GuestLayout from '@/components/Layouts/GuestLayout'
+import { useAuth } from '@/hooks/auth'
+import { motion } from 'framer-motion'
+import Input from '@/components/Input'
 
 const Login = () => {
-    const router = useRouter();
+    const router = useRouter()
 
     const { login } = useAuth({
         middleware: 'guest',
         redirectIfAuthenticated: '/dashboard',
-    });
+    })
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [shouldRemember, setShouldRemember] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const [errors, setErrors] = useState([]);
-    const [status, setStatus] = useState(null);
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [shouldRemember, setShouldRemember] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
+    const [errors, setErrors] = useState([])
+    const [status, setStatus] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     const submitForm = async (event) => {
-        event.preventDefault();
+        event.preventDefault()
+
+        setIsLoading(true)
 
         login({
             email,
@@ -35,15 +38,15 @@ const Login = () => {
         })
             .then(() => {
                 if (user && user.role_id === 1) {
-                    router.push('/dashboard');
+                    router.push('/dashboard')
                 } else if (user && user.role_id === 2) {
-                    router.push('/siswa');
+                    router.push('/siswa')
                 }
             })
             .catch((error) => {
-                console.error('Login failed:', error);
-            });
-    };
+                console.error('Login failed:', error)
+            })
+    }
 
     return (
         <GuestLayout>
@@ -129,20 +132,23 @@ const Login = () => {
                             </div>
 
                             {/* Tombol Sign In */}
+
                             <div className="mt-5 flex">
                                 <button
                                     type="submit"
                                     className="bg-primary text-sm hover:bg-red-600 transition duration-150 text-white font-semibold py-2 px-4 rounded-md w-full"
+                                    disabled={isLoading} // Menonaktifkan tombol saat loading
                                 >
-                                    Sign In
+                                    {isLoading ? 'Loading...' : 'Sign In'}
                                 </button>
                             </div>
+
                         </form>
                     </div>
                 </div>
             </motion.section>
         </GuestLayout>
-    );
-};
+    )
+}
 
-export default Login;
+export default Login

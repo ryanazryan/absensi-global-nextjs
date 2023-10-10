@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { useAuth } from '@/hooks/auth'
 import { useState } from 'react'
 
-const Register = () => {
+const Register = ({ csrfToken }) => {
     const { register } = useAuth({
         middleware: 'guest',
         redirectIfAuthenticated: '/dashboard',
@@ -42,6 +42,8 @@ const Register = () => {
                     </Link>
                 }>
                 <form onSubmit={submitForm}>
+                    {/* Token CSRF*/}
+                    <input type='hidden' name='_token' value={csrfToken} />
                     {/* Name */}
                     <div>
                         <Label htmlFor="name">Name</Label>

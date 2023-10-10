@@ -3,21 +3,21 @@ import DashboardPage from '@/components/DashboardPage';
 import AppLayout from '@/components/Layouts/AppLayout';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react'; // Perlu mengimpor useEffect
 
 const Dashboard = () => {
-    const { user } = useAuth(); // Dapatkan data pengguna dari hook useAuth
+    const { user } = useAuth();     
     const router = useRouter();
 
-    // Pastikan pengguna telah berhasil login
-    if (!user) {
-        // Jika pengguna belum login, Anda dapat mengarahkannya ke halaman login atau halaman lain sesuai kebijakan Anda.
-        router.push('/login');
-        return null;
-    }
+    useEffect(() => {
+        if (!user) {
+            router.push('/login');
+        } else if (user.role_id === 2) {
+            router.push('/kegiatan');
+        }
+    }, [user, router]);
 
-    // Selanjutnya, periksa role_id pengguna dan arahkan mereka sesuai dengan role mereka.
-    if (user.role_id === 1) {
-        // Pengguna dengan role_id 1 adalah admin, izinkan akses ke dashboard.
+    if (user && user.role_id === 1) {
         return (
             <AppLayout
                 header={
@@ -36,18 +36,13 @@ const Dashboard = () => {
                 </div>
             </AppLayout>
         );
-    } else if (user.role_id === 2) {
-        // Pengguna dengan role_id 2 adalah user, arahkan ke halaman siswa.
-        router.push('/siswa');
-        return null;
+    } else {
+        return (
+            <div>
+                Anda tidak memiliki izin untuk mengakses halaman ini.
+            </div>
+        );
     }
-
-    // Selain itu, jika role_id tidak dikenali, Anda dapat melakukan tindakan lain sesuai kebijakan Anda.
-    return (
-        <div>
-            Anda tidak memiliki izin untuk mengakses halaman ini.
-        </div>
-    );
 };
 
 export default Dashboard;

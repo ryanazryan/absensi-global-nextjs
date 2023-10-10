@@ -45,8 +45,8 @@ const Navigation = ({ user }) => {
                                 </>
                             )}
                             {user?.role_id === 2 && (
-                                <NavLink href="/siswa" active={router.pathname === '/siswa'}>
-                                    <p>Siswa</p>
+                                <NavLink href="/kegiatan" active={router.pathname === '/kegiatan'}>
+                                    <p>Kegiatan</p>
                                 </NavLink>
                             )}
                         </div>
@@ -106,12 +106,23 @@ const Navigation = ({ user }) => {
             {open && (
                 <div className="block sm:hidden">
                     <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href="/dashboard" active={router.pathname === '/dashboard'}>
-                            Dashboard
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink href="/siswa" active={router.pathname === '/siswa'}>
-                            Siswa
-                        </ResponsiveNavLink>
+                        {user?.role_id === 1 && (
+                            <>
+                                <ResponsiveNavLink href="/dashboard" active={router.pathname === '/dashboard'}>
+                                    Dashboard
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink href="/siswa" active={router.pathname === '/siswa'}>
+                                    Siswa
+                                </ResponsiveNavLink>
+                            </>
+                        )}
+                        {user?.role_id === 2 && (
+                            <>
+                                <ResponsiveNavLink href="/kegiatan" active={router.pathname === '/kegiatan'}>
+                                    Kegiatan
+                                </ResponsiveNavLink>
+                            </>
+                        )}
                     </div>
 
                     {/* Responsive Settings Options */}
