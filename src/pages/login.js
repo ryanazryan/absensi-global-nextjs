@@ -74,14 +74,14 @@ const Login = () => {
                                     onChange={(event) => setEmail(event.target.value)}
                                     required
                                     autoFocus
-                                    placeholder="Email address"
+                                    placeholder="Email"
                                 />
                             </div>
 
                             {/* Input password */}
                             <div className="mb-5 relative">
                                 <label htmlFor="password" className="block text-dark font-semibold mb-1">
-                                    Password
+                                    Kata Sandi
                                 </label>
                                 <Input
                                     id="password"
@@ -89,7 +89,7 @@ const Login = () => {
                                     value={password}
                                     onChange={(event) => setPassword(event.target.value)}
                                     required
-                                    placeholder="Password"
+                                    placeholder="Kata Sandi"
                                 />
                                 <span
                                     className="absolute inset-y-0 right-0 flex mt-4 items-center pr-3 cursor-pointer"
@@ -115,8 +115,8 @@ const Login = () => {
 
                             <div className="mb-5 flex items-center">
                                 <label className="flex items-center cursor-pointer">
-                                    <span className="text-gray-700">Remember me</span>
-                                    <div className={`relative ml-2 w-10 h-5 rounded-full ${shouldRemember ? 'bg-red-500' : 'bg-input'} transition-all duration-300 ease-in-out`}>
+                                    <span className="text-gray-700">Ingatkan Saya</span>
+                                    <div className={`relative ml-2 w-10 h-5 rounded-full ${shouldRemember ? 'bg-primary' : 'bg-input'} transition-all duration-300 ease-in-out`}>
                                         <input
                                             type="checkbox"
                                             className="hidden"
@@ -139,7 +139,7 @@ const Login = () => {
                                     className="bg-primary text-sm hover:bg-red-600 transition duration-150 text-white font-semibold py-2 px-4 rounded-md w-full"
                                     disabled={isLoading} // Menonaktifkan tombol saat loading
                                 >
-                                    {isLoading ? 'Loading...' : 'Sign In'}
+                                    {isLoading ? 'Memuat...' : 'Masuk'}
                                 </button>
                             </div>
 

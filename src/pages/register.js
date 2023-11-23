@@ -35,18 +35,21 @@ const Register = ({ csrfToken }) => {
 
     return (
         <GuestLayout>
+        <div className='w-full max-w-md'>
+
+        </div>
             <AuthCard
                 logo={
-                    <Link href="/">
+                    <Link href="">
                         <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
                     </Link>
                 }>
-                <form onSubmit={submitForm}>
+                <form onSubmit={submitForm} className='max-w-screen-md mx-auto'>
                     {/* Token CSRF*/}
                     <input type='hidden' name='_token' value={csrfToken} />
                     {/* Name */}
                     <div>
-                        <Label htmlFor="name">Name</Label>
+                        <Label htmlFor="name">Nama</Label>
 
                         <Input
                             id="name"
@@ -79,7 +82,7 @@ const Register = ({ csrfToken }) => {
 
                     {/* Password */}
                     <div className="mt-4">
-                        <Label htmlFor="password">Password</Label>
+                        <Label htmlFor="password">Kata sandi</Label>
 
                         <Input
                             id="password"
@@ -100,7 +103,7 @@ const Register = ({ csrfToken }) => {
                     {/* Confirm Password */}
                     <div className="mt-4">
                         <Label htmlFor="passwordConfirmation">
-                            Confirm Password
+                            Konfirmasi Kata Sandi
                         </Label>
 
                         <Input
@@ -124,10 +127,10 @@ const Register = ({ csrfToken }) => {
                         <Link
                             href="/login"
                             className="underline text-sm text-gray-600 hover:text-gray-900">
-                            Already registered?
+                            Sudah Daftar?
                         </Link>
 
-                        <Button className="ml-4">Register</Button>
+                        <Button className="ml-4">Daftar</Button>
                     </div>
                 </form>
             </AuthCard>

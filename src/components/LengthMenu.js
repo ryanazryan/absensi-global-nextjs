@@ -4,8 +4,8 @@ function LengthMenu({ entriesPerPage, onEntriesPerPageChange, totalEntries }) {
     const options = [totalEntries];
 
     return (
-        <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-3 text-sm text-gray-700">
-            <span className="hidden sm:inline">Show</span>
+        <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 h-2 mb-9 sm:space-x-3 text-sm text-gray-700">
+            <span className="hidden sm:inline">Menampilkan</span>
             <div className="relative">
                 <select
                     className="rounded-md shadow-md pl-3 pr-10 py-1 border-none appearance-none bg-white cursor-pointer"
@@ -19,7 +19,7 @@ function LengthMenu({ entriesPerPage, onEntriesPerPageChange, totalEntries }) {
                     ))}
                 </select>
             </div>
-            <span className="hidden sm:inline">entries</span>
+            <span className="hidden sm:inline">entri</span>
         </div>
     );
 }

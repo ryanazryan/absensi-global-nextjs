@@ -35,7 +35,7 @@ const Dashboard = () => {
                     </div>
                 </div>
             </AppLayout>
-        );
+        )
     } else {
         return (
             <div>

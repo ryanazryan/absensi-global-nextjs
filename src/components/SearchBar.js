@@ -13,7 +13,7 @@ function SearchBar() {
           className="hover:border-none border-none h-full w-full outline-none text-sm"
           type="text"
           id="search"
-          placeholder="Search..."
+          placeholder="Cari..."
         />
       </div>
     </div>

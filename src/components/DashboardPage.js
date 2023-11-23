@@ -1,18 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import SearchBar from './SearchBar';
-import LengthMenu from './LengthMenu';
-import axiosInstance from '@/lib/axios';
+import React, { useEffect, useState } from 'react'
+import SearchBar from './SearchBar'
+import LengthMenu from './LengthMenu'
+import axiosInstance from '@/lib/axios'
+import { Form, Link } from 'react-router-dom'
+import { useRouter } from 'next/router'
 
-function DashboardPage() { // Rename the component to "DashboardPage"
-    const [kegiatan, setKegiatan] = useState([]);
-    const [detailText, setDetailText] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+function DashboardPage() {
+    const [kegiatan, setKegiatan] = useState([])
+    const [detailText, setDetailText] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+    const router = useRouter()
 
     const [isSmallerScreen, setIsSmallerScreen] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
+
+    const handleClick = () => {
+        router.push('/form')
+    }
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -23,6 +30,7 @@ function DashboardPage() { // Rename the component to "DashboardPage"
     };
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     const openModal = () => {
         setIsModalOpen(true);
     };
@@ -31,10 +39,11 @@ function DashboardPage() { // Rename the component to "DashboardPage"
         setIsModalOpen(false);
     };
 
+    const [isAddFormOpen, setIsAddFormOpen] = useState(false)
+    
 
 
     useEffect(() => {
-        // Set loading menjadi true saat mengambil data
         setLoading(true);
 
         const laravelSessionCookie = document.cookie
@@ -47,36 +56,34 @@ function DashboardPage() { // Rename the component to "DashboardPage"
         }
 
         const checkScreenSize = () => {
-            setIsSmallerScreen(window.innerWidth <= 500); // Ganti 640 dengan lebar layar yang sesuai
+            setIsSmallerScreen(window.innerWidth <= 500);
         };
 
-        // Make a GET request to your Laravel API endpoint
         axiosInstance.get('/api/kegiatan')
-        .then((response) => {
-          setKegiatan(response.data);
-          setTimeout(() => {
-            setLoading(false);
-          }, 300);
-        })
-        .catch((error) => {
-          setError(error.message);
-          setTimeout(() => {
-            setLoading(false);
-          }, 300);
-          console.error('Error fetching data:', error);
-        });
-  
-      checkScreenSize();
-      window.addEventListener('resize', checkScreenSize);
-  
-      return () => {
-        window.removeEventListener('resize', checkScreenSize);
-      };
-  
+            .then((response) => {
+                setKegiatan(response.data);
+                setTimeout(() => {
+                    setLoading(false);
+                }, 300);
+            })
+            .catch((error) => {
+                setError(error.message);
+                setTimeout(() => {
+                    setLoading(false);
+                }, 300);
+                console.error('Error fetching data:', error);
+            });
+
+        checkScreenSize();
+        window.addEventListener('resize', checkScreenSize);
+
+        return () => {
+            window.removeEventListener('resize', checkScreenSize);
+        };
+
     }, []);
 
     if (loading) {
-        // Tampilkan UI loading saat loading adalah true
         return (
             <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white opacity-75 z-50">
                 <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-primary"></div>
@@ -86,6 +93,10 @@ function DashboardPage() { // Rename the component to "DashboardPage"
 
     if (error) {
         return <div>Error: {error}</div>;
+    }
+
+    if (!Array.isArray(kegiatan)) {
+        return <div>Error: Data format is not an array.</div>;
     }
 
     return (
@@ -113,11 +124,10 @@ function DashboardPage() { // Rename the component to "DashboardPage"
                                     </button>
                                 </div>
                                 <div className="flex-grow">
-                                    <button className="bg-primary hover:bg-red-600 text-white active:bg-red-500 px-4 py-2 text-sm rounded-lg shadow-md mr-3 outline-none focus:outline-none ease-linear transition-all duration-150 flex items-center">
+                                    <button onClick={handleClick} className="bg-primary hover:bg-red-600 text-white active:bg-red-500 px-4 py-2 text-sm rounded-lg shadow-md mr-3 outline-none focus:outline-none ease-linear transition-all duration-150 flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
                                         </svg>
-
                                         Tambah Kegiatan
                                     </button>
                                 </div>
@@ -185,8 +195,10 @@ function DashboardPage() { // Rename the component to "DashboardPage"
                                         <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap font-semibold text-left'>{item.id}</td>
                                         <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap  text-left'>{item.nama_kegiatan}</td>
                                         <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap  text-left'>{item.waktu_kegiatan}</td>
-                                        <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap  text-left'>{item.kelas_terlibat}</td>
-                                        <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap  text-left'>{item.total_kehadiran} Siswa</td>
+                                        <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap text-left'>
+                                            {item.kelas_x === 1 && 'X,'} {item.kelas_xi === 1 && 'XI,'} {item.kelas_xii === 1 && 'XII'}
+                                        </td>
+                                        <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap  text-left'>{item.jumlah_kehadiran}</td>
                                         <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap text-left'>
                                             <button>
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
