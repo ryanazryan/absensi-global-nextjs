@@ -19,7 +19,7 @@ const App = ({ Component, pageProps, router }) => {
   return (
     <SessionProvider session={pageProps.session}>
       <Head>
-        <meta name="csrf-token" content="{{ csrf_token() }}" />
+        <meta name="csrf-token" content={pageProps.csrfToken} />
       </Head>
       <motion.div
         key={router.route}

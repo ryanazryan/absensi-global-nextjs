@@ -1,24 +1,22 @@
-import Calendar from '@/components/Calendar'
+import KehadiranPage from '@/components/KehadiranPage'
 import AppLayout from '@/components/Layouts/AppLayout'
 import Head from 'next/head'
 
-const Kegiatan = () => {
+const Kehadiran = () => {
     return (
         <AppLayout
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Kegiatan
+                    Kehadiran
                 </h2>
             }>
             <Head>
-                <title>Absensi Global - Kegiatan</title>
+                <title>Absensi Global - Kehadiran</title>
             </Head>
-            <Calendar />
+            <KehadiranPage />
 
-            
         </AppLayout>
-        
     )
 }
 
-export default Kegiatan
+export default Kehadiran

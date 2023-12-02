@@ -17,9 +17,15 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             }),
     )
 
+    const fetchCsrfToken = async () => {
+        const response = await axios.get('/api/csrf-token', { withCredentials: true });
+        return response.data.csrfToken;
+    };
+
+
     const csrf = async () => {
-        await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
-      }
+        return fetchCsrfToken();
+    };
 
     const register = async ({ setErrors, ...props }) => {
         await csrf()
@@ -46,7 +52,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             const response = await axios.post('/login', props);
             const userData = response.data;
             userData.role_id = response.data.role_id;
-            mutate(userData); 
+            mutate(userData);
         } catch (error) {
             if (error.response.status !== 422) throw error;
             setErrors(error.response.data.errors);
@@ -120,5 +126,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         resetPassword,
         resendEmailVerification,
         logout,
+        csrf,
     }
 }

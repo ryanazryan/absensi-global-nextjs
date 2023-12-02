@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import SearchBar from './SearchBar'
 import LengthMenu from './LengthMenu'
 import axiosInstance from '@/lib/axios'
-import { Form, Link } from 'react-router-dom'
 import { useRouter } from 'next/router'
 
 function DashboardPage() {
@@ -18,8 +17,25 @@ function DashboardPage() {
     const itemsPerPage = 10;
 
     const handleClick = () => {
-        router.push('/form')
+        router.push('/tambah')
     }
+
+    const exportButton = () => {
+        const csvData = kegiatan.map(item => `${item.id},${item.nama_kegiatan},${item.waktu_kegiatan},${item.kelas_x},${item.kelas_xi},${item.kelas_xii},${item.jumlah_kehadiran}`);
+        const csvString = csvData.join('\n');
+        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+    
+        if (link.download !== undefined) {
+          const url = URL.createObjectURL(blob);
+          link.setAttribute('href', url);
+          link.setAttribute('download', 'kegiatan.csv');
+          link.style.visibility = 'hidden';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      };
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -116,11 +132,11 @@ function DashboardPage() {
                             <div className="flex">
                                 <div className="flex-grow">
 
-                                    <button className="bg-background hover:bg-gray-200 hover:ease-in text-dark active:bg-red-500 px-4 py-2 text-sm rounded-lg shadow-md mr-3 outline-none focus:outline-none ease-linear transition-all duration-150 flex items-center">
+                                    <button onClick={exportButton} className="bg-background hover:bg-gray-200 hover:ease-in text-dark active:bg-red-500 px-4 py-2 text-sm rounded-lg shadow-md mr-3 outline-none focus:outline-none ease-linear transition-all duration-150 flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 mr-2">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
                                         </svg>
-                                        Export
+                                        Ekspor
                                     </button>
                                 </div>
                                 <div className="flex-grow">
@@ -233,12 +249,12 @@ function DashboardPage() {
                     <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                         <div className="flex flex-1 items-center justify-center">
                             <p className="text-sm text-gray-700 mr-4">
-                                Showing{' '}
-                                <span className="font-medium">{indexOfFirstItem + 1}</span> to{' '}
+                                Menampilkan{' '}
+                                <span className="font-medium">{indexOfFirstItem + 1}</span> sampai{' '}
                                 <span className="font-medium">
                                     {Math.min(indexOfLastItem, kegiatan.length)}
                                 </span>{' '}
-                                of <span className="font-medium">{kegiatan.length}</span> entries
+                                dari <span className="font-medium">{kegiatan.length}</span> data
                             </p>
                             <div className='bg-white py-2 px-3 rounded-md shadow-md'>
                                 <nav
