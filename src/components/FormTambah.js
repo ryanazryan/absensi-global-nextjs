@@ -16,7 +16,6 @@ const FormTambah = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Kirim data ke API menggunakan fetch atau axios
     const response = await fetch('http://localhost:8000/api/kegiatan/add', {
       method: 'POST',
       headers: {
@@ -33,11 +32,9 @@ const FormTambah = () => {
     });
 
     if (response.ok) {
-      // Handle sukses
       console.log('Data berhasil ditambahkan');
-      router.push('/dashboard'); // Alihkan ke halaman dashboard menggunakan router
+      router.push('/dashboard'); 
     } else {
-      // Handle error, misalnya tampilkan pesan error
       console.error('Gagal menambahkan data');
     }
   };

@@ -27,10 +27,10 @@ const FormEdit = () => {
                 const response = await fetch(`http://localhost:8000/api/kegiatan/${id}/edit`);
                 const data = await response.json();
                 setItem(data);
-    
+
                 setFormData({
                     nama_kegiatan: data.nama_kegiatan,
-                    waktu_kegiatan: formatDate(data.waktu_kegiatan),
+                    waktu_kegiatan: format(new Date(data.waktu_kegiatan), 'yyyy-MM-dd'),
                     kelas_x: data.kelas_x,
                     kelas_xi: data.kelas_xi,
                     kelas_xii: data.kelas_xii,
@@ -40,19 +40,18 @@ const FormEdit = () => {
                 console.error('Error fetching data:', error);
             }
         };
-    
+
         fetchData();
     }, [id]);
 
     const handleChange = (e) => {
         const { name, type, checked } = e.target;
         let value = type === 'checkbox' ? checked : e.target.value;
-    
+
         if (type === 'text' && e.inputType === 'deleteContentBackward') {
-            // Handle backspace for text input
             value = value.slice(0, -1);
         }
-    
+
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -63,18 +62,10 @@ const FormEdit = () => {
         e.preventDefault();
 
         try {
-            // Send a POST request to update data
-            const response = await fetch(`http://localhost:8000/api/kegiatan/${id}/update`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
+            const response = await axios.post(`http://localhost:8000/api/kegiatan/${id}/update`, formData);
 
-            if (response.ok) {
+            if (response.status === 200) {
                 console.log('Data updated successfully!');
-                // Redirect to the updated data or another page
                 router.push('/dashboard');
             } else {
                 console.error('Failed to update data');
@@ -98,6 +89,7 @@ const FormEdit = () => {
                             id='nama_kegiatan'
                             value={formData.nama_kegiatan}
                             onChange={handleChange}
+                            name='nama_kegiatan' 
                         />
                     </div>
                     <div className='md:col-span-5'>

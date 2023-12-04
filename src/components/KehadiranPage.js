@@ -26,12 +26,10 @@ const KehadiranPage = () => {
         e.preventDefault();
 
         try {
-            // Mengirim gambar ke server menggunakan axios atau metode pengiriman data lainnya
             const formData = new FormData();
             formData.append('nis', nis);
             formData.append('bukti', bukti);
 
-            // Tambahkan logika untuk mengirim data ke server
             const response = await axios.post('/api/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',

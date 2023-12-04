@@ -15,7 +15,7 @@ function DashboardPage() {
     const [selectedItem, setSelectedItem] = useState(null)
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredKegiatan, setFilteredKegiatan] = useState([]);
-    
+
 
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
@@ -38,22 +38,22 @@ function DashboardPage() {
 
     const handleSearch = (term) => {
         const filteredItems = kegiatan.filter((item) =>
-          item.nama_kegiatan.toLowerCase().includes(term.toLowerCase())
+            item.nama_kegiatan.toLowerCase().includes(term.toLowerCase())
         );
         setFilteredKegiatan(filteredItems);
         setCurrentPage(1); // Reset to the first page after a search
-      };
+    };
 
     const handleSearchInputChange = event => {
         setSearchInput(event.target.value);
     };
 
-    const handleEdit = (item) => {
+    const handleEdit = (itemId) => {
         router.push({
-          pathname: '/edit',
-          query: { id: item.id, data: JSON.stringify(item) },
+            pathname: '/edit',
+            query: { id: itemId },
         });
-      };
+    };
 
     const handleDelete = (itemId) => {
         // Implement logic for delete action
@@ -152,9 +152,9 @@ function DashboardPage() {
     }
 
     // Paginate the data based on the current page and items per page
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredKegiatan.slice(indexOfFirstItem, indexOfLastItem);
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredKegiatan.slice(indexOfFirstItem, indexOfLastItem);
 
     return (
 
@@ -278,7 +278,8 @@ function DashboardPage() {
                                                     >
                                                         <div className="py-1" role="none">
                                                             <button
-                                                                onClick={() => handleEdit(item)}
+                                                                key={item.id}
+                                                                onClick={() => handleEdit(item.id)}
                                                                 className="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                                                                 role="menuitem"
                                                             >
