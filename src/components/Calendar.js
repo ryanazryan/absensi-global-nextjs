@@ -16,9 +16,11 @@
 
     const handleClick = (namaKegiatan) => {
       setSelectedKegiatan(namaKegiatan);
-      setIsModalOpen(true);
-      setNamaKegiatanTerpilih(namaKegiatan)
-      router.push('/kehadiran')
+      setNamaKegiatanTerpilih(namaKegiatan);
+      router.push({
+        pathname: '/kehadiran',
+        query: { namaKegiatan: encodeURIComponent(namaKegiatan) },
+      });
     };
 
     useEffect(() => {
@@ -88,7 +90,7 @@
                 {getEventsForDay(day + 1).map((event) => (
                   <div
                     key={event.id}
-                    className={`event bg-primary text-white rounded p-3 text-xs mb-2 mt-1 lg:${'hidden'}`}>
+                    className={`event bg-primary text-white rounded p-2 text-xs mb-2 mt-2 ml-2 mr-2 lg:${'hidden'}`}>
                     {event.nama_kegiatan}
                   </div>
                 ))}
@@ -106,9 +108,9 @@
 
     const renderEventButtons = () => {
       return (
-        <div className="flex flex-col items-center">
+        <div className="grid grid-cols-2 gap-4">
           {selectedEvent.map((event) => (
-            <div key={event.id} className="event-container bg-white text-black rounded p-3 mb-4">
+            <div key={event.id} className="event-container bg-white text-black rounded p-3">
               <div className="flex justify-center items-center flex-col mb-2">
                 <span className="event-label text-sm font-semibold text-black">Nama Kegiatan:</span>
                 <span className="event-name text-sm mb-2">{event.nama_kegiatan}</span>
@@ -124,6 +126,7 @@
         </div>
       );
     };
+    
 
     const getEventClassForDay = (day) => {
       const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
@@ -161,16 +164,16 @@
             onClick={goToPreviousMonth}
             className="text-xl font-semibold cursor-pointer text-black mb-2 lg:mb-0 lg:mr-2"
           >
-            &#x2190; Previous Month
+            &#x2190; Bulan Sebelumnya
           </button>
-          <div className="text-xl font-semibold text-gray-800 mb-2 lg:mb-0">
-            {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+            <div className="text-xl font-semibold text-gray-800 mb-2 lg:mb-0">
+              {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
           </div>
           <button
             onClick={goToNextMonth}
             className="text-xl font-semibold cursor-pointer  text-black"
           >
-            Next Month &#x2192;
+            Bulan Selanjutnya &#x2192;
           </button>
         </div>
         <div className="grid grid-cols-7 gap-2 text-center">
@@ -190,7 +193,7 @@
               {renderEventButtons()}
               <button
                 onClick={closeEventDetails}
-                className="mt-4 px-6 py-2 bg-primary text-white rounded-md focus:outline-none"
+                className="mt-8 px-6 py-2 bg-primary text-white rounded-md focus:outline-none"
               >
                 Close
               </button>

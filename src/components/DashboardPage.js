@@ -10,11 +10,55 @@ function DashboardPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const router = useRouter()
+    const { id, data } = router.query
+    const item = data && typeof data === 'string' ? JSON.parse(data) : null;
+    const [selectedItem, setSelectedItem] = useState(null)
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredKegiatan, setFilteredKegiatan] = useState([]);
+    
+
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+    const checkScreenSize = () => {
+        setScreenWidth(window.innerWidth);
+        setIsSmallerScreen(window.innerWidth <= 500);
+    };
+
+
 
     const [isSmallerScreen, setIsSmallerScreen] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
+    const itemsPerPage = 6;
+    const [searchInput, setSearchInput] = useState('')
+
+    const setFilteredData = data => {
+        setFilteredKegiatan(data);
+    };
+
+    const handleSearch = (term) => {
+        const filteredItems = kegiatan.filter((item) =>
+          item.nama_kegiatan.toLowerCase().includes(term.toLowerCase())
+        );
+        setFilteredKegiatan(filteredItems);
+        setCurrentPage(1); // Reset to the first page after a search
+      };
+
+    const handleSearchInputChange = event => {
+        setSearchInput(event.target.value);
+    };
+
+    const handleEdit = (item) => {
+        router.push({
+          pathname: '/edit',
+          query: { id: item.id, data: JSON.stringify(item) },
+        });
+      };
+
+    const handleDelete = (itemId) => {
+        // Implement logic for delete action
+        console.log('Delete item with id:', itemId);
+    };
 
     const handleClick = () => {
         router.push('/tambah')
@@ -25,21 +69,18 @@ function DashboardPage() {
         const csvString = csvData.join('\n');
         const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
-    
-        if (link.download !== undefined) {
-          const url = URL.createObjectURL(blob);
-          link.setAttribute('href', url);
-          link.setAttribute('download', 'kegiatan.csv');
-          link.style.visibility = 'hidden';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
-      };
 
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = kegiatan.slice(indexOfFirstItem, indexOfLastItem);
+        if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'kegiatan.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    };
+
 
     const showDetail = (text) => {
         setDetailText(text);
@@ -55,8 +96,13 @@ function DashboardPage() {
         setIsModalOpen(false);
     };
 
-    const [isAddFormOpen, setIsAddFormOpen] = useState(false)
-    
+    const [isAddFormOpen, setIsAddFormOpen] = useState(false);
+    const [openDropdownId, setOpenDropdownId] = useState(null);
+
+    const handleDropdownClick = (itemId) => {
+        setOpenDropdownId((prevId) => (prevId === itemId ? null : itemId));
+    };
+
 
 
     useEffect(() => {
@@ -64,39 +110,33 @@ function DashboardPage() {
 
         const laravelSessionCookie = document.cookie
             .split('; ')
-            .find(cookie => cookie.startsWith('laravel_session='));
+            .find((cookie) => cookie.startsWith('laravel_session='));
 
         if (laravelSessionCookie) {
             const token = laravelSessionCookie.split('=')[1];
             console.log(token); // Token autentikasi Sanctum
         }
 
-        const checkScreenSize = () => {
-            setIsSmallerScreen(window.innerWidth <= 500);
+        const fetchData = async () => {
+            try {
+                const response = await axiosInstance.get('/api/kegiatan');
+                setKegiatan(response.data);
+                setFilteredKegiatan(response.data);
+                setLoading(false);
+            } catch (error) {
+                setError(error.message);
+                setLoading(false);
+                console.error('Error fetching data:', error);
+            }
         };
 
-        axiosInstance.get('/api/kegiatan')
-            .then((response) => {
-                setKegiatan(response.data);
-                setTimeout(() => {
-                    setLoading(false);
-                }, 300);
-            })
-            .catch((error) => {
-                setError(error.message);
-                setTimeout(() => {
-                    setLoading(false);
-                }, 300);
-                console.error('Error fetching data:', error);
-            });
-
+        fetchData();
         checkScreenSize();
         window.addEventListener('resize', checkScreenSize);
 
         return () => {
             window.removeEventListener('resize', checkScreenSize);
         };
-
     }, []);
 
     if (loading) {
@@ -111,17 +151,18 @@ function DashboardPage() {
         return <div>Error: {error}</div>;
     }
 
-    if (!Array.isArray(kegiatan)) {
-        return <div>Error: Data format is not an array.</div>;
-    }
+    // Paginate the data based on the current page and items per page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredKegiatan.slice(indexOfFirstItem, indexOfLastItem);
 
     return (
 
         <section className="py-1">
             <div className="w-full mb-12 xl:mb-0 px-4 mx-auto mt-5">
                 <div className='flex items-center'>
-                    <LengthMenu totalEntries={kegiatan.length} />
-                    <SearchBar />
+                    <LengthMenu totalEntries={filteredKegiatan.length} />
+                    <SearchBar onSearch={handleSearch} />
                 </div>
                 <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-md rounded mt-8">
                     <div className="rounded-t mb-0 px-4 py-3 border-0">
@@ -132,7 +173,7 @@ function DashboardPage() {
                             <div className="flex">
                                 <div className="flex-grow">
 
-                                    <button onClick={exportButton} className="bg-background hover:bg-gray-200 hover:ease-in text-dark active:bg-red-500 px-4 py-2 text-sm rounded-lg shadow-md mr-3 outline-none focus:outline-none ease-linear transition-all duration-150 flex items-center">
+                                    <button onClick={exportButton} className={`bg-background hover:bg-gray-200 hover:ease-in text-dark active:bg-red-500 px-4 py-2 text-sm rounded-lg shadow-md mr-3 outline-none focus:outline-none ease-linear transition-all duration-150 flex items-center ${isSmallerScreen ? 'mb-3' : ''}`}>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 mr-2">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
                                         </svg>
@@ -140,7 +181,7 @@ function DashboardPage() {
                                     </button>
                                 </div>
                                 <div className="flex-grow">
-                                    <button onClick={handleClick} className="bg-primary hover:bg-red-600 text-white active:bg-red-500 px-4 py-2 text-sm rounded-lg shadow-md mr-3 outline-none focus:outline-none ease-linear transition-all duration-150 flex items-center">
+                                    <button onClick={handleClick} className={`bg-primary hover:bg-red-600 text-white active:bg-red-500 px-4 py-2 text-sm rounded-lg shadow-md mr-3 outline-none focus:outline-none ease-linear transition-all duration-150 flex items-center ${isSmallerScreen ? 'mb-3' : ''}`}>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
                                         </svg>
@@ -154,7 +195,7 @@ function DashboardPage() {
 
                     <div className="block w-full overflow-x-auto text-gray-700">
 
-                        <table className="items-center bg-transparent w-full border-collapse rounded-lg text-center">
+                        <table className={`items-center bg-transparent w-full border-collapse rounded-lg text-center ${isSmallerScreen ? 'sm:table' : ''}`}>
                             <thead>
                                 <tr className='bg-secondary'>
                                     <th className="px-6 align-middle border border-solid py-3 text-xs border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
@@ -206,21 +247,54 @@ function DashboardPage() {
                             </thead>
 
                             <tbody>
-                                {kegiatan.map((item) => (
+                                {currentItems.map((item) => (
                                     <tr className='hover:bg-gray-100 border-b-gray-500 transition duration-200' key={item.id}>
                                         <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap font-semibold text-left'>{item.id}</td>
                                         <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap  text-left'>{item.nama_kegiatan}</td>
                                         <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap  text-left'>{item.waktu_kegiatan}</td>
                                         <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap text-left'>
-                                            {item.kelas_x === 1 && 'X,'} {item.kelas_xi === 1 && 'XI,'} {item.kelas_xii === 1 && 'XII'}
+                                            {item.kelas_x === 1 && 'X'} {item.kelas_xi === 1 && 'XI'} {item.kelas_xii === 1 && 'XII'}
                                         </td>
                                         <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap  text-left'>{item.jumlah_kehadiran}</td>
-                                        <td className='px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap text-left'>
-                                            <button>
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 0100 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
-                                                </svg>
-                                            </button>
+                                        <td className="px-6 align-middle border border-solid py-3 text-sm border-l-0 border-r-0 whitespace-nowrap text-left">
+                                            <div className="relative inline-block text-left">
+                                                <button
+                                                    type="button"
+                                                    className="inline-flex z-0 items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-black hover:text-gray-700 focus:outline-none focus:border-gray-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-800"
+                                                    id={`options-menu-${item.id}`}
+                                                    aria-expanded={openDropdownId === item.id}
+                                                    onClick={() => handleDropdownClick(item.id)}
+                                                >
+                                                    <svg class="w-4 h-4 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
+                                                        <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
+                                                    </svg>
+                                                </button>
+                                                {openDropdownId === item.id && (
+                                                    <div
+                                                        className="origin-top-right z-10 absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+                                                        role="menu"
+                                                        aria-orientation="vertical"
+                                                        aria-labelledby={`options-menu-${item.id}`}
+                                                    >
+                                                        <div className="py-1" role="none">
+                                                            <button
+                                                                onClick={() => handleEdit(item)}
+                                                                className="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                                role="menuitem"
+                                                            >
+                                                                Edit
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDelete(item.id)}
+                                                                className="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                                role="menuitem"
+                                                            >
+                                                                Hapus
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}

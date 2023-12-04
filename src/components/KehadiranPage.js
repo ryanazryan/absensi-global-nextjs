@@ -2,10 +2,18 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useDropzone } from 'react-dropzone';
 import Input from './Input';
+import { useRouter } from 'next/router';
+import { backOut } from 'framer-motion';
 
-const KehadiranPage = ({ namaKegiatan }) => {
+const KehadiranPage = () => {
     const [nis, setNIS] = useState('');
     const [bukti, setBukti] = useState(null);
+    const router = useRouter()
+    const { namaKegiatan } = router.query;
+
+    const goToCalendar = () => {
+        router.push('/kegiatan')
+    }
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         accept: 'image/*',
@@ -40,8 +48,11 @@ const KehadiranPage = ({ namaKegiatan }) => {
     return (
         <div className='lg:col-span-2'>
             <form onSubmit={handleSubmit}>
-                <div className='grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5 my-6 mx-10 px-10 py-10 shadow-lg bg-white'>
-                    <h1 className='my-5 font-semibold text-lg'>Data Kehadiran {namaKegiatan}</h1>
+                <div className='grid gap-2 gap-y-2 text-sm grid-cols-1 md:grid-cols-5 my-6 mx-2 md:mx-10 px-4 md:px-10 py-10 shadow-lg bg-white'>
+                    <div className='flex justify-center mx-auto md:col-span-5'>
+                        <h1 className='my-5 font-semibold text-lg'>Data Kehadiran </h1>
+                        <h1 className='my-5 font-bold text-lg ml-3'>{namaKegiatan} </h1>
+                    </div>
                     <div className='md:col-span-5'>
                         <label htmlFor="nis">NIS</label>
                         <Input
@@ -70,12 +81,22 @@ const KehadiranPage = ({ namaKegiatan }) => {
                             )}
                         </div>
                     </div>
+                    <div className='flex justify-center mt-5 xs:flex-col'>
+
                     <button
-                        className="bg-primary hover:bg-red-600 w-40 h-12 text-white mt-5 active:bg-red-500 px-4 py-2 text-sm rounded-lg shadow-md mr-3 outline-none focus:outline-none ease-linear transition-all duration-150 flex items-center justify-center"
+                        className="bg-primary mr-2 hover:bg-red-600 w-full md:w-40 h-12 text-white mt-5 active:bg-red-500 text-sm rounded-lg shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
                         type='submit'
                     >
                         Kirim
                     </button>
+                    <button
+                        onClick={goToCalendar}
+                        className="bg-primary ml-2 hover:bg-red-600 w-full md:w-40 h-12 text-white mt-5 active:bg-red-500 text-sm rounded-lg shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+                        type='button'
+                    >
+                        Kembali
+                    </button>
+                    </div>
                 </div>
             </form>
         </div>
