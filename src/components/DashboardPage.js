@@ -3,6 +3,7 @@ import SearchBar from './SearchBar'
 import LengthMenu from './LengthMenu'
 import axiosInstance from '@/lib/axios'
 import { useRouter } from 'next/router'
+import axios from 'axios'
 
 function DashboardPage() {
     const [kegiatan, setKegiatan] = useState([])
@@ -11,150 +12,180 @@ function DashboardPage() {
     const [error, setError] = useState(null)
     const router = useRouter()
     const { id, data } = router.query
-    const item = data && typeof data === 'string' ? JSON.parse(data) : null;
+    const item = data && typeof data === 'string' ? JSON.parse(data) : null
     const [selectedItem, setSelectedItem] = useState(null)
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filteredKegiatan, setFilteredKegiatan] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('')
+    const [filteredKegiatan, setFilteredKegiatan] = useState([])
 
-
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth)
 
     const checkScreenSize = () => {
-        setScreenWidth(window.innerWidth);
-        setIsSmallerScreen(window.innerWidth <= 500);
-    };
+        setScreenWidth(window.innerWidth)
+        setIsSmallerScreen(window.innerWidth <= 500)
+    }
 
 
 
-    const [isSmallerScreen, setIsSmallerScreen] = useState(false);
+    const [isSmallerScreen, setIsSmallerScreen] = useState(false)
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 6;
+    const [currentPage, setCurrentPage] = useState(1)
+    const itemsPerPage = 6
     const [searchInput, setSearchInput] = useState('')
 
     const setFilteredData = data => {
-        setFilteredKegiatan(data);
-    };
+        setFilteredKegiatan(data)
+    }
 
     const handleSearch = (term) => {
         const filteredItems = kegiatan.filter((item) =>
             item.nama_kegiatan.toLowerCase().includes(term.toLowerCase())
-        );
-        setFilteredKegiatan(filteredItems);
-        setCurrentPage(1); // Reset to the first page after a search
-    };
+        )
+        setFilteredKegiatan(filteredItems)
+        setCurrentPage(2) // Reset to the first page after a search
+    }
 
     const handleSearchInputChange = event => {
-        setSearchInput(event.target.value);
-    };
+        setSearchInput(event.target.value)
+    }
+
+    const handleDelete = (id) => {
+        const apiUrl = `http://localhost:8000/api/kegiatan/${id}`
+    
+        const requestOptions = {
+            method: 'DELETE',
+        }
+    
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`)
+                }
+                return response.json()
+            })
+            .then(data => {
+                console.log('Data berhasil dihapus:', data)
+                // Update the state after successful deletion
+                setKegiatan(prevKegiatan => prevKegiatan.filter(item => item.id !== id))
+                // Wait for the state update to complete before reloading and redirecting
+                setTimeout(() => {
+                    window.location.reload()
+                    router.push('/dashboard')
+                }, 0)
+            })
+            .catch(error => {
+                console.error('Error deleting data:', error)
+                // Handle error, possibly display a message to the user
+            })
+    }
+    
+    
+    
+
 
     const handleEdit = (itemId) => {
         router.push({
             pathname: '/edit',
             query: { id: itemId },
-        });
-    };
+        })
+    }
 
-    const handleDelete = (itemId) => {
-        // Implement logic for delete action
-        console.log('Delete item with id:', itemId);
-    };
+
+
 
     const handleClick = () => {
         router.push('/tambah')
     }
 
     const exportButton = () => {
-        const csvData = kegiatan.map(item => `${item.id},${item.nama_kegiatan},${item.waktu_kegiatan},${item.kelas_x},${item.kelas_xi},${item.kelas_xii},${item.jumlah_kehadiran}`);
-        const csvString = csvData.join('\n');
-        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
+        const csvData = kegiatan.map(item => `${item.id},${item.nama_kegiatan},${item.waktu_kegiatan},${item.kelas_x},${item.kelas_xi},${item.kelas_xii},${item.jumlah_kehadiran}`)
+        const csvString = csvData.join('\n')
+        const blob = new Blob([csvString], { type: 'text/csvcharset=utf-8' })
+        const link = document.createElement('a')
 
         if (link.download !== undefined) {
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', 'kegiatan.csv');
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const url = URL.createObjectURL(blob)
+            link.setAttribute('href', url)
+            link.setAttribute('download', 'kegiatan.csv')
+            link.style.visibility = 'hidden'
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
         }
-    };
+    }
 
 
     const showDetail = (text) => {
-        setDetailText(text);
-    };
+        setDetailText(text)
+    }
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     const openModal = () => {
-        setIsModalOpen(true);
-    };
+        setIsModalOpen(true)
+    }
 
     const closeModal = () => {
-        setIsModalOpen(false);
-    };
+        setIsModalOpen(false)
+    }
 
-    const [isAddFormOpen, setIsAddFormOpen] = useState(false);
-    const [openDropdownId, setOpenDropdownId] = useState(null);
+    const [isAddFormOpen, setIsAddFormOpen] = useState(false)
+    const [openDropdownId, setOpenDropdownId] = useState(null)
 
     const handleDropdownClick = (itemId) => {
-        setOpenDropdownId((prevId) => (prevId === itemId ? null : itemId));
-    };
+        setOpenDropdownId((prevId) => (prevId === itemId ? null : itemId))
+    }
 
 
 
     useEffect(() => {
-        setLoading(true);
+        setLoading(true)
 
         const laravelSessionCookie = document.cookie
-            .split('; ')
-            .find((cookie) => cookie.startsWith('laravel_session='));
+            .split(' ')
+            .find((cookie) => cookie.startsWith('laravel_session='))
 
         if (laravelSessionCookie) {
-            const token = laravelSessionCookie.split('=')[1];
-            console.log(token); // Token autentikasi Sanctum
+            const token = laravelSessionCookie.split('=')[1]
+            console.log(token) // Token autentikasi Sanctum
         }
 
         const fetchData = async () => {
             try {
-                const response = await axiosInstance.get('/api/kegiatan');
-                setKegiatan(response.data);
-                setFilteredKegiatan(response.data);
-                setLoading(false);
+                const response = await axiosInstance.get('/api/kegiatan')
+                setKegiatan(response.data)
+                setFilteredKegiatan(response.data)
+                setLoading(false)
             } catch (error) {
-                setError(error.message);
-                setLoading(false);
-                console.error('Error fetching data:', error);
+                setError(error.message)
+                setLoading(false)
+                console.error('Error fetching data:', error)
             }
-        };
+        }
 
-        fetchData();
-        checkScreenSize();
-        window.addEventListener('resize', checkScreenSize);
+        fetchData()
+        checkScreenSize()
+        window.addEventListener('resize', checkScreenSize)
 
         return () => {
-            window.removeEventListener('resize', checkScreenSize);
-        };
-    }, []);
+            window.removeEventListener('resize', checkScreenSize)
+        }
+    }, [])
 
     if (loading) {
         return (
             <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white opacity-75 z-50">
                 <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-primary"></div>
             </div>
-        );
+        )
     }
 
     if (error) {
-        return <div>Error: {error}</div>;
+        return <div>Error: {error}</div>
     }
 
-    // Paginate the data based on the current page and items per page
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredKegiatan.slice(indexOfFirstItem, indexOfLastItem);
+    const indexOfLastItem = currentPage * itemsPerPage
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage
+    const currentItems = filteredKegiatan.slice(indexOfFirstItem, indexOfLastItem)
 
     return (
 
@@ -172,7 +203,6 @@ function DashboardPage() {
                             </div>
                             <div className="flex">
                                 <div className="flex-grow">
-
                                     <button onClick={exportButton} className={`bg-background hover:bg-gray-200 hover:ease-in text-dark active:bg-red-500 px-4 py-2 text-sm rounded-lg shadow-md mr-3 outline-none focus:outline-none ease-linear transition-all duration-150 flex items-center ${isSmallerScreen ? 'mb-3' : ''}`}>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 mr-2">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
@@ -189,7 +219,6 @@ function DashboardPage() {
                                     </button>
                                 </div>
                             </div>
-
                         </div>
                     </div>
 
@@ -265,34 +294,31 @@ function DashboardPage() {
                                                     aria-expanded={openDropdownId === item.id}
                                                     onClick={() => handleDropdownClick(item.id)}
                                                 >
-                                                    <svg class="w-4 h-4 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
+                                                    <svg className="w-4 h-4 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
                                                         <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
                                                     </svg>
                                                 </button>
                                                 {openDropdownId === item.id && (
                                                     <div
-                                                        className="origin-top-right z-10 absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+                                                        className="origin-top-right z-10 absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 fade-in"
                                                         role="menu"
                                                         aria-orientation="vertical"
                                                         aria-labelledby={`options-menu-${item.id}`}
                                                     >
-                                                        <div className="py-1" role="none">
-                                                            <button
-                                                                key={item.id}
-                                                                onClick={() => handleEdit(item.id)}
-                                                                className="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                                                role="menuitem"
-                                                            >
-                                                                Edit
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handleDelete(item.id)}
-                                                                className="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                                                role="menuitem"
-                                                            >
-                                                                Hapus
-                                                            </button>
-                                                        </div>
+                                                        <button
+                                                            key={item.id}
+                                                            onClick={() => handleEdit(item.id)}
+                                                            className="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                            role="menuitem"
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete(item.id)}
+                                                            className="flex px-4 py-2 text-sm text-red-600 hover:bg-gray-100 hover:text-gray-900"
+                                                        >
+                                                            Hapus
+                                                        </button>
                                                     </div>
                                                 )}
                                             </div>
@@ -404,7 +430,7 @@ function DashboardPage() {
 
         </section>
 
-    );
+    )
 }
 
-export default DashboardPage;
+export default DashboardPage

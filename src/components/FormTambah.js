@@ -2,7 +2,8 @@ import { useState } from 'react';
 import Input from './Input';
 import Checkbox from './Checkbox';
 import { useRouter } from 'next/router';
-
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from 'react-toastify';
 
 const FormTambah = () => {
   const router = useRouter();
@@ -33,6 +34,7 @@ const FormTambah = () => {
 
     if (response.ok) {
       console.log('Data berhasil ditambahkan');
+      toast.success('Data berhasil ditambahkan');
       router.push('/dashboard'); 
     } else {
       console.error('Gagal menambahkan data');
@@ -113,6 +115,7 @@ const FormTambah = () => {
           </button>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 };
