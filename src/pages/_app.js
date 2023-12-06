@@ -1,7 +1,7 @@
-import { motion } from 'framer-motion';
-import 'tailwindcss/tailwind.css';
-import { SessionProvider } from 'next-auth/react';
-import Head from 'next/head'; // Import Head dari next/head
+import { motion } from 'framer-motion'
+import 'tailwindcss/tailwind.css'
+import { SessionProvider } from 'next-auth/react'
+import Head from 'next/head' // Import Head dari next/head
 
 const App = ({ Component, pageProps, router }) => {
   const pageTransition = {
@@ -14,7 +14,7 @@ const App = ({ Component, pageProps, router }) => {
         duration: 0.5,
       },
     },
-  };
+  }
 
   return (
     <SessionProvider session={pageProps.session}>
@@ -30,7 +30,7 @@ const App = ({ Component, pageProps, router }) => {
         <Component {...pageProps} />
       </motion.div>
     </SessionProvider>
-  );
-};
+  )
+}
 
-export default App;
+export default App

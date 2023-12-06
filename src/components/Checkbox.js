@@ -1,5 +1,5 @@
 // ./Checkbox.js
-import React from 'react';
+import React from 'react'
 
 const Checkbox = ({ id, name, checked, onChange }) => {
   return (
@@ -13,7 +13,7 @@ const Checkbox = ({ id, name, checked, onChange }) => {
         className='h-8 w-8 border mt-5 rounded bg-gray-50'
       />
     </div>
-  );
-};
+  )
+}
 
-export default Checkbox;
+export default Checkbox

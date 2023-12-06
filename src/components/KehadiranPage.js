@@ -1,76 +1,74 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Select from 'react-select';
-import Input from './Input';
-import { useRouter } from 'next/router';
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem } from "@nextui-org/react";
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import Select from 'react-select'
+import Input from './Input'
+import { useRouter } from 'next/router'
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem } from "@nextui-org/react"
 
 const KehadiranPage = ({ selectedKegiatan }) => {
-    const [nis, setNis] = useState('');
-    const [selectedOption, setSelectedOption] = useState(null);
-    const [bukti, setBukti] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [kegiatanOptions, setKegiatanOptions] = useState([]);
-    const router = useRouter();
+    const [nis, setNis] = useState('')
+    const [selectedOption, setSelectedOption] = useState(null)
+    const [bukti, setBukti] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [kegiatanOptions, setKegiatanOptions] = useState([])
+    const router = useRouter()
 
     const handleFileChange = (e) => {
-        setBukti(e.target.files[0]);
-    };
+        setBukti(e.target.files[0])
+    }
 
     useEffect(() => {
         const fetchKegiatanOptions = async () => {
             try {
-                setLoading(true);
-                const response = await axios.get('http://localhost:8000/api/kegiatan');
-                setKegiatanOptions(response.data);
+                setLoading(true)
+                const response = await axios.get('http://localhost:8000/api/kegiatan')
+                setKegiatanOptions(response.data)
             } catch (error) {
-                console.error(error);
+                console.error(error)
             } finally {
-                setLoading(false);
+                setLoading(false)
             }
-        };
+        }
 
-        fetchKegiatanOptions();
-    }, []);
+        fetchKegiatanOptions()
+    }, [])
 
     useEffect(() => {
         if (selectedKegiatan) {
-            const selectedOption = kegiatanOptions.find((option) => option.nama_kegiatan === selectedKegiatan);
-            setSelectedOption(selectedOption);
+            const selectedOption = kegiatanOptions.find((option) => option.nama_kegiatan === selectedKegiatan)
+            setSelectedOption(selectedOption)
         }
-    }, [selectedKegiatan, kegiatanOptions]);
+    }, [selectedKegiatan, kegiatanOptions])
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
     
-        // Log the selected option
-        console.log(selectedOption);
+        console.log(selectedOption)
     
-        // Validate that an option is selected
         if (!selectedOption) {
-            console.error('No kegiatan selected.');
-            return;
+            console.error('No kegiatan selected.')
+            return
         }
     
         try {
-            const formData = new FormData();
-            formData.append('id_kegiatan', selectedOption?.value || ''); // Use .value to get the id
-            formData.append('nis', nis);
-            formData.append('bukti', bukti);
+            const formData = new FormData()
+            formData.append('id_kegiatan', selectedOption?.value || '') 
+            formData.append('nis', nis)
+            formData.append('bukti', bukti)
     
             const response = await axios.post('http://localhost:8000/api/kehadiran/add', formData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-            });
+            })
     
-            console.log(response.data);
+            console.log(response.data)
     
-            router.push('/kegiatan');
+            router.push('/kegiatan')
         } catch (error) {
-            console.error(error);
+            console.error(error)
         }
-    };
+    }
     
 
     if (loading) {
@@ -78,12 +76,12 @@ const KehadiranPage = ({ selectedKegiatan }) => {
             <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white opacity-75 z-50">
                 <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-primary"></div>
             </div>
-        );
+        )
     }
 
     const goToCalendar = () => {
-        router.push('/kegiatan');
-    };
+        router.push('/kegiatan')
+    }
 
     return (
         <div className='lg:col-span-2'>
@@ -94,7 +92,7 @@ const KehadiranPage = ({ selectedKegiatan }) => {
                         <label htmlFor='id_kegiatan'>Kegiatan:</label>
                         <Select
                             defaultValue={selectedOption}
-                            className='border-primary mt-4 mb-2'  // Add margin-top for spacing
+                            className='border-primary mt-4 mb-2'
                             onChange={(selectedOption) => setSelectedOption(selectedOption)}
                             options={kegiatanOptions.map((kegiatan) => ({
                                 value: kegiatan.id,
@@ -145,7 +143,7 @@ const KehadiranPage = ({ selectedKegiatan }) => {
                 </div>
             </form>
         </div>
-    );
-};
+    )
+}
 
-export default KehadiranPage;
+export default KehadiranPage

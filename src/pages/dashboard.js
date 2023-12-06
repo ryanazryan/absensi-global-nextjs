@@ -1,21 +1,21 @@
-import { useAuth } from '@/hooks/auth';
-import DashboardPage from '@/components/DashboardPage';
-import AppLayout from '@/components/Layouts/AppLayout';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react'; // Perlu mengimpor useEffect
+import { useAuth } from '@/hooks/auth'
+import DashboardPage from '@/components/DashboardPage'
+import AppLayout from '@/components/Layouts/AppLayout'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 const Dashboard = () => {
-    const { user } = useAuth();     
-    const router = useRouter();
+    const { user } = useAuth()     
+    const router = useRouter()
 
     useEffect(() => {
         if (!user) {
-            router.push('/login');
+            router.push('/login')
         } else if (user.role_id === 2) {
-            router.push('/kegiatan');
+            router.push('/kegiatan')
         }
-    }, [user, router]);
+    }, [user, router])
 
     if (user && user.role_id === 1) {
         return (
@@ -41,8 +41,8 @@ const Dashboard = () => {
             <div>
                 Anda tidak memiliki izin untuk mengakses halaman ini.
             </div>
-        );
+        )
     }
-};
+}
 
-export default Dashboard;
+export default Dashboard

@@ -1,35 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import LengthMenu from './LengthMenu';
-import SearchBar from './SearchBar';
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import LengthMenu from './LengthMenu'
+import SearchBar from './SearchBar'
 
 const BuktiKehadiran = () => {
-  const [data, setData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
-  const [searchTerm, setSearchTerm] = useState('');
+  const [data, setData] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 6
+  const [searchTerm, setSearchTerm] = useState('')
 
   const handleSearch = (searchTerm) => {
-    setSearchTerm(searchTerm);
-  };
+    setSearchTerm(searchTerm)
+  }
 
   const filteredData = data.filter((item) => {
     return (
       item.nis.toString().includes(searchTerm) ||
       item.nama_kegiatan.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  });
+    )
+  })
 
   useEffect(() => {
-    // Mengambil data dari API Laravel
     axios.get('http://localhost:8000/api/kehadiran')
       .then(response => setData(response.data))
-      .catch(error => console.error('Error fetching data:', error));
-  }, []);
+      .catch(error => console.error('Error fetching data:', error))
+  }, [])
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+  const indexOfLastItem = currentPage * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem)
 
   return (
     <section className="py-1">
@@ -202,7 +201,7 @@ const BuktiKehadiran = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default BuktiKehadiran;
+export default BuktiKehadiran

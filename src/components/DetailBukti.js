@@ -1,34 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { useParams } from 'react-router-dom'
 
 const DetailBukti = () => {
-  const { id } = useParams();
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { id } = useParams()
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get(`{{laravel_url}}api/kehadiran/${id}`);
-        setData(response.data);
+        setLoading(true)
+        const response = await axios.get(`{{laravel_url}}api/kehadiran/${id}`)
+        setData(response.data)
       } catch (error) {
-        console.error(error);
+        console.error(error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchData();
-  }, [id]);
+    fetchData()
+  }, [id])
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   if (!data) {
-    return <div>Data not found</div>;
+    return <div>Data not found</div>
   }
 
   return (
@@ -45,7 +45,7 @@ const DetailBukti = () => {
         onError={(e) => console.error('Error loading image:', e)}
       />
     </div>
-  );
-};
+  )
+}
 
-export default DetailBukti;
+export default DetailBukti

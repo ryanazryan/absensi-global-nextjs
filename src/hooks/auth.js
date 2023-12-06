@@ -18,14 +18,14 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     )
 
     const fetchCsrfToken = async () => {
-        const response = await axios.get('/api/csrf-token', { withCredentials: true });
-        return response.data.csrfToken;
-    };
+        const response = await axios.get('/api/csrf-token', { withCredentials: true })
+        return response.data.csrfToken
+    }
 
 
     const csrf = async () => {
-        return fetchCsrfToken();
-    };
+        return fetchCsrfToken()
+    }
 
     const register = async ({ setErrors, ...props }) => {
         await csrf()
@@ -49,13 +49,13 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         setStatus(null)
 
         try {
-            const response = await axios.post('/login', props);
-            const userData = response.data;
-            userData.role_id = response.data.role_id;
-            mutate(userData);
+            const response = await axios.post('/login', props)
+            const userData = response.data
+            userData.role_id = response.data.role_id
+            mutate(userData)
         } catch (error) {
-            if (error.response.status !== 422) throw error;
-            setErrors(error.response.data.errors);
+            if (error.response.status !== 422) throw error
+            setErrors(error.response.data.errors)
         }
     }
 

@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
-import Input from './Input';
-import Checkbox from './Checkbox';
-import { useRouter } from 'next/router';
-import { format } from 'date-fns';
-import axios from 'axios';
+import { useState, useEffect } from 'react'
+import Input from './Input'
+import Checkbox from './Checkbox'
+import { useRouter } from 'next/router'
+import { format } from 'date-fns'
+import axios from 'axios'
 
 
 const FormEdit = () => {
 
-    const router = useRouter();
-    const { id } = router.query;
-    const [item, setItem] = useState(null);
+    const router = useRouter()
+    const { id } = router.query
+    const [item, setItem] = useState(null)
 
     const [formData, setFormData] = useState({
         nama_kegiatan: '',
@@ -19,14 +19,14 @@ const FormEdit = () => {
         kelas_xi: false,
         kelas_xii: false,
         jumlah_kehadiran: 0,
-    });
+    })
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/api/kegiatan/${id}/edit`);
-                const data = await response.json();
-                setItem(data);
+                const response = await fetch(`http://localhost:8000/api/kegiatan/${id}/edit`)
+                const data = await response.json()
+                setItem(data)
 
                 setFormData({
                     nama_kegiatan: data.nama_kegiatan,
@@ -35,45 +35,45 @@ const FormEdit = () => {
                     kelas_xi: data.kelas_xi,
                     kelas_xii: data.kelas_xii,
                     jumlah_kehadiran: data.jumlah_kehadiran,
-                });
+                })
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching data:', error)
             }
-        };
+        }
 
-        fetchData();
-    }, [id]);
+        fetchData()
+    }, [id])
 
     const handleChange = (e) => {
-        const { name, type, checked } = e.target;
-        let value = type === 'checkbox' ? checked : e.target.value;
+        const { name, type, checked } = e.target
+        let value = type === 'checkbox' ? checked : e.target.value
 
         if (type === 'text' && e.inputType === 'deleteContentBackward') {
-            value = value.slice(0, -1);
+            value = value.slice(0, -1)
         }
 
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
-        }));
-    };
+        }))
+    }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         try {
-            const response = await axios.post(`http://localhost:8000/api/kegiatan/${id}/update`, formData);
+            const response = await axios.post(`http://localhost:8000/api/kegiatan/${id}/update`, formData)
 
             if (response.status === 200) {
-                console.log('Data updated successfully!');
-                router.push('/dashboard');
+                console.log('Data updated successfully!')
+                router.push('/dashboard')
             } else {
-                console.error('Failed to update data');
+                console.error('Failed to update data')
             }
         } catch (error) {
-            console.error('Error updating data:', error);
+            console.error('Error updating data:', error)
         }
-    };
+    }
 
 
     return (
@@ -152,7 +152,7 @@ const FormEdit = () => {
                 </div>
             </form>
         </div>
-    );
-};
+    )
+}
 
-export default FormEdit;
+export default FormEdit

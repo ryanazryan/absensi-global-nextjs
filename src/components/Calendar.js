@@ -1,76 +1,76 @@
-    import React, { useState, useEffect } from 'react';
-    import axios from 'axios';
-    import { useRouter } from 'next/router';
-    import KehadiranPage from './KehadiranPage';
+    import React, { useState, useEffect } from 'react'
+    import axios from 'axios'
+    import { useRouter } from 'next/router'
+    import KehadiranPage from './KehadiranPage'
 
     const Calendar = () => {
-      const [events, setEvents] = useState([]);
-      const [currentDate, setCurrentDate] = useState(new Date());
-      const [selectedEvent, setSelectedEvent] = useState(null);
-      const [isModalOpen, setIsModalOpen] = useState(false);
-      const [selectedKegiatan, setSelectedKegiatan] = useState('');
-      const [isKehadiranAvailable, setIsKehadiranAvailable] = useState(false);
-      const [namaKegiatanTerpilih, setNamaKegiatanTerpilih] = useState('');
+      const [events, setEvents] = useState([])
+      const [currentDate, setCurrentDate] = useState(new Date())
+      const [selectedEvent, setSelectedEvent] = useState(null)
+      const [isModalOpen, setIsModalOpen] = useState(false)
+      const [selectedKegiatan, setSelectedKegiatan] = useState('')
+      const [isKehadiranAvailable, setIsKehadiranAvailable] = useState(false)
+      const [namaKegiatanTerpilih, setNamaKegiatanTerpilih] = useState('')
 
-      const router = useRouter();
+      const router = useRouter()
 
       const handleClick = (namaKegiatan) => {
-        setSelectedKegiatan(namaKegiatan);
         setSelectedKegiatan(namaKegiatan)
-        setNamaKegiatanTerpilih(namaKegiatan);
+        setSelectedKegiatan(namaKegiatan)
+        setNamaKegiatanTerpilih(namaKegiatan)
         router.push({
           pathname: '/kehadiran',
           query: { selectedKegiatan: encodeURIComponent(namaKegiatan) },
-        });
-      };
+        })
+      }
 
       useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await axios.get(`http://localhost:8000/api/kegiatan`);
+            const response = await axios.get(`http://localhost:8000/api/kegiatan`)
             const filteredEvents = response.data.filter((event) => {
-              const eventDate = new Date(event.waktu_kegiatan);
+              const eventDate = new Date(event.waktu_kegiatan)
               return (
                 eventDate.getMonth() === currentDate.getMonth() &&
                 eventDate.getFullYear() === currentDate.getFullYear()
-              );
-            });
-            setEvents(filteredEvents);
+              )
+            })
+            setEvents(filteredEvents)
           } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching data:', error)
           }
-        };
+        }
 
-        fetchData();
-      }, [currentDate]);
+        fetchData()
+      }, [currentDate])
 
       const getEventClass = (theme) => {
         return {
           'bg-red-500 text-white': true,
-        };
-      };
+        }
+      }
 
       const getDaysInMonth = (year, month) => {
-        return new Date(year, month + 1, 0).getDate();
-      };
+        return new Date(year, month + 1, 0).getDate()
+      }
 
       const getFirstDayOfMonth = (year, month) => {
-        return new Date(year, month, 1).getDay();
-      };
+        return new Date(year, month, 1).getDay()
+      }
 
       const goToPreviousMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
-      };
+        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1))
+      }
 
       const goToNextMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
-      };
+        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1))
+      }
 
       const renderCalendarDays = () => {
-        const daysInMonth = getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth());
-        const firstDay = getFirstDayOfMonth(currentDate.getFullYear(), currentDate.getMonth());
-        const daysArray = [...Array(daysInMonth).keys()];
-        const blanksArray = [...Array(firstDay).keys()];
+        const daysInMonth = getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth())
+        const firstDay = getFirstDayOfMonth(currentDate.getFullYear(), currentDate.getMonth())
+        const daysArray = [...Array(daysInMonth).keys()]
+        const blanksArray = [...Array(firstDay).keys()]
 
         return blanksArray
           .map(() => <div key={Math.random()} className="text-center text-gray-300"></div>)
@@ -98,14 +98,14 @@
                 </div>
               </div>
             ))
-          );
-      };
+          )
+      }
 
       const showEventDetails = (day) => {
-        const dayEvents = getEventsForDay(day);
-        setSelectedEvent(dayEvents);
-        setIsKehadiranAvailable(dayEvents.length > 0);
-      };
+        const dayEvents = getEventsForDay(day)
+        setSelectedEvent(dayEvents)
+        setIsKehadiranAvailable(dayEvents.length > 0)
+      }
 
       const renderEventButtons = () => {
         return (
@@ -125,38 +125,38 @@
               </div>
             ))}
           </div>
-        );
-      };
+        )
+      }
       
 
       const getEventClassForDay = (day) => {
-        const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+        const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
         const dayEvents = events.filter(
           (event) =>
             new Date(event.waktu_kegiatan).getDate() === day &&
             new Date(event.waktu_kegiatan).getMonth() === currentDate.getMonth()
-        );
+        )
 
         if (dayEvents.length > 0) {
-          return getEventClass(dayEvents[0].event_theme);
+          return getEventClass(dayEvents[0].event_theme)
         }
 
-        return '';
-      };
+        return ''
+      }
 
       const getEventsForDay = (day) => {
         return events.filter(
           (event) =>
             new Date(event.waktu_kegiatan).getDate() === day &&
             new Date(event.waktu_kegiatan).getMonth() === currentDate.getMonth()
-        );
-      };
+        )
+      }
 
       const closeEventDetails = () => {
-        setSelectedEvent(null);
-        setIsKehadiranAvailable(false);
-        setIsModalOpen(false);
-      };
+        setSelectedEvent(null)
+        setIsKehadiranAvailable(false)
+        setIsModalOpen(false)
+      }
 
       return (
         <div className="container mx-auto mt-8 p-4 lg:p-8 bg-white shadow-md rounded-md">
@@ -165,7 +165,7 @@
               onClick={goToPreviousMonth}
               className="text-xl font-semibold cursor-pointer text-black mb-2 lg:mb-0 lg:mr-2"
             >
-              &#x2190; Bulan Sebelumnya
+              &#x2190 Bulan Sebelumnya
             </button>
               <div className="text-xl font-semibold text-gray-800 mb-2 lg:mb-0">
                 {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
@@ -174,7 +174,7 @@
               onClick={goToNextMonth}
               className="text-xl font-semibold cursor-pointer  text-black"
             >
-              Bulan Selanjutnya &#x2192;
+              Bulan Selanjutnya &#x2192
             </button>
           </div>
           <div className="grid grid-cols-7 gap-2 text-center">
@@ -202,7 +202,7 @@
             </div>
           )}
         </div>
-      );
-    };
+      )
+    }
 
-    export default Calendar;
+    export default Calendar

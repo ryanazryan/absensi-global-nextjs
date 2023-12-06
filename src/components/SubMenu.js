@@ -1,8 +1,8 @@
-import { useRouter } from 'next/router';
-import Link from 'next/link';
+import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 const Submenu = () => {
-  const router = useRouter();
+  const router = useRouter()
 
   return (
     <div className="relative inline-block text-left">
@@ -59,7 +59,7 @@ const Submenu = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Submenu;
+export default Submenu

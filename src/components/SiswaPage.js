@@ -1,88 +1,84 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import SearchBar from './SearchBar';
-import LengthMenu from './LengthMenu';
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import SearchBar from './SearchBar'
+import LengthMenu from './LengthMenu'
 
 const SiswaPage = () => {
-  const [siswa, setSiswa] = useState([]);
-  const [filteredSiswa, setFilteredSiswa] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
-  const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [kelas, setKelas] = useState({});
+  const [siswa, setSiswa] = useState([])
+  const [filteredSiswa, setFilteredSiswa] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 6
+  const [searchTerm, setSearchTerm] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [kelas, setKelas] = useState({})
 
 
   const setFilteredData = (data) => {
-    setFilteredSiswa(data);
-  };
+    setFilteredSiswa(data)
+  }
 
 
   const handleSearch = (searchTerm) => {
-    setSearchTerm(searchTerm);
+    setSearchTerm(searchTerm)
   
     const filteredData = siswa.filter((siswaData) => {
-      const nameMatch = siswaData.name.toLowerCase().includes(searchTerm.toLowerCase());
-      const nisMatch = siswaData.nis.toString().includes(searchTerm);
+      const nameMatch = siswaData.name.toLowerCase().includes(searchTerm.toLowerCase())
+      const nisMatch = siswaData.nis.toString().includes(searchTerm)
       const jurusanMatch = kelas[siswaData.id_kelas]
         ? kelas[siswaData.id_kelas].jurusan.toLowerCase().includes(searchTerm.toLowerCase())
-        : false;
+        : false
   
-      return nameMatch || nisMatch || jurusanMatch;
-    });
+      return nameMatch || nisMatch || jurusanMatch
+    })
   
-    setFilteredSiswa(filteredData);
-    setCurrentPage(1);
-  };
+    setFilteredSiswa(filteredData)
+    setCurrentPage(1)
+  }
   
 
 
   useEffect(() => {
-    // Fungsi untuk mengambil data siswa dari API Laravel
     const fetchSiswaData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/siswa');
-        const data = await response.json();
-        setSiswa(data);
-        setFilteredSiswa(data); // Set filteredSiswa along with siswa
+        const response = await fetch('http://localhost:8000/api/siswa')
+        const data = await response.json()
+        setSiswa(data)
+        setFilteredSiswa(data)
       } catch (error) {
-        console.error('Error fetching siswa data:', error);
+        console.error('Error fetching siswa data:', error)
       }
-    };
+    }
   
-    // Panggil fungsi fetch data siswa
-    fetchSiswaData();
-  }, []);
+    fetchSiswaData()
+  }, [])
   
 
   useEffect(() => {
-    // Fungsi untuk mengambil data kelas dari API Laravel berdasarkan id_kelas
     const fetchKelasData = async (idKelas) => {
       try {
-        const response = await fetch(`http://localhost:8000/api/kelas/${idKelas}`);
-        const data = await response.json();
+        const response = await fetch(`http://localhost:8000/api/kelas/${idKelas}`)
+        const data = await response.json()
         setKelas((prevKelas) => ({
           ...prevKelas,
           [idKelas]: {
             nama_kelas: data.nama_kelas,
             jurusan: data.jurusan,
           },
-        }));
+        }))
       } catch (error) {
-        console.error('Error fetching kelas data:', error);
+        console.error('Error fetching kelas data:', error)
       }
-    };
+    }
 
-    // Panggil fungsi fetch data kelas untuk setiap siswa
     siswa.forEach((siswaData) => {
-      fetchKelasData(siswaData.id_kelas);
-    });
-  }, [siswa]);
+      fetchKelasData(siswaData.id_kelas)
+    })
+  }, [siswa])
 
   const exportButton = () => {
     const csvData = siswa.map((item) => `${item.id},${item.nis},${item.name},${item.id_kelas}`)
     const csvString = csvData.join('\n')
-    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8' })
+    const blob = new Blob([csvString], { type: 'text/csvcharset=utf-8' })
     const link = document.createElement('a')
   
     if (link.download !== undefined) {
@@ -94,14 +90,14 @@ const SiswaPage = () => {
       link.click()
       document.body.removeChild(link)
     }
-  };
+  }
   
 
 
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredSiswa.slice(indexOfFirstItem, indexOfLastItem);
+  const indexOfLastItem = currentPage * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+  const currentItems = filteredSiswa.slice(indexOfFirstItem, indexOfLastItem)
 
   return (
     <section className="py-1">
@@ -294,7 +290,7 @@ const SiswaPage = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default SiswaPage;
+export default SiswaPage

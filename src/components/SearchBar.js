@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 function SearchBar({ onSearch }) {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('')
 
   const handleSearchChange = (event) => {
-    const term = event.target.value;
-    setSearchTerm(term);
+    const term = event.target.value
+    setSearchTerm(term)
     // Call the onSearch callback with the search term
-    onSearch(term);
-  };
+    onSearch(term)
+  }
 
   return (
     <div className="max-w-xs ml-auto relative">
@@ -28,7 +28,7 @@ function SearchBar({ onSearch }) {
         />
       </div>
     </div>
-  );
+  )
 }
 
-export default SearchBar;
+export default SearchBar

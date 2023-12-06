@@ -1,18 +1,18 @@
-import Dropdown from '@/components/Dropdown';
-import Link from 'next/link';
-import NavLink from '@/components/NavLink';
-import ResponsiveNavLink, { ResponsiveNavButton } from '@/components/ResponsiveNavLink';
-import { DropdownButton } from '@/components/DropdownLink';
-import { useAuth } from '@/hooks/auth';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import logo from '../../../public/images/logo2.png';
-import Image from 'next/image';
+import Dropdown from '@/components/Dropdown'
+import Link from 'next/link'
+import NavLink from '@/components/NavLink'
+import ResponsiveNavLink, { ResponsiveNavButton } from '@/components/ResponsiveNavLink'
+import { DropdownButton } from '@/components/DropdownLink'
+import { useAuth } from '@/hooks/auth'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import logo from '../../../public/images/logo2.png'
+import Image from 'next/image'
 
 const Navigation = ({ user }) => {
-    const router = useRouter();
-    const { logout } = useAuth(user);
-    const [open, setOpen] = useState(false);
+    const router = useRouter()
+    const { logout } = useAuth(user)
+    const [open, setOpen] = useState(false)
 
     return (
         <nav className="bg-white border-b border-gray-100 shadow-md">
@@ -169,7 +169,7 @@ const Navigation = ({ user }) => {
                 </div>
             )}
         </nav>
-    );
-};
+    )
+}
 
-export default Navigation;
+export default Navigation

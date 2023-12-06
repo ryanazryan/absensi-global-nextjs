@@ -1,7 +1,7 @@
-import React from 'react';
+import React from 'react'
 
 function LengthMenu({ entriesPerPage, onEntriesPerPageChange, totalEntries }) {
-    const options = [totalEntries];
+    const options = [totalEntries]
 
     return (
         <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 h-2 mb-9 sm:space-x-3 text-sm text-gray-700">
@@ -21,7 +21,7 @@ function LengthMenu({ entriesPerPage, onEntriesPerPageChange, totalEntries }) {
             </div>
             <span className="hidden sm:inline">entri</span>
         </div>
-    );
+    )
 }
 
-export default LengthMenu;
+export default LengthMenu

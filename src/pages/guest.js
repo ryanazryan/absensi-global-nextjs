@@ -1,5 +1,5 @@
-import React from 'react';
-import AppLayout from '@/components/Layouts/AppLayout';
+import React from 'react'
+import AppLayout from '@/components/Layouts/AppLayout'
 
 const Guest = () => {
   return (
@@ -16,7 +16,7 @@ const Guest = () => {
         </div>
       </div>
     </AppLayout>
-  );
-};
+  )
+}
 
-export default Guest;
+export default Guest

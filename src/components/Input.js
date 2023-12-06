@@ -6,6 +6,6 @@ const Input = ({ disabled = false, className, onChange, ...props }) => (
       {...props}
       style={{ outline: 'none' }}
   />
-);
+)
 
-export default Input;
+export default Input

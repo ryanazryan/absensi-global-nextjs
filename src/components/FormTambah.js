@@ -1,21 +1,21 @@
-import { useState } from 'react';
-import Input from './Input';
-import Checkbox from './Checkbox';
-import { useRouter } from 'next/router';
+import { useState } from 'react'
+import Input from './Input'
+import Checkbox from './Checkbox'
+import { useRouter } from 'next/router'
 import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify'
 
 const FormTambah = () => {
-  const router = useRouter();
-  const [namaKegiatan, setNamaKegiatan] = useState('');
-  const [waktuKegiatan, setWaktuKegiatan] = useState('');
-  const [kelasX, setKelasX] = useState(false);
-  const [kelasXI, setKelasXI] = useState(false);
-  const [kelasXII, setKelasXII] = useState(false);
-  const [jumlahKehadiran, setJumlahKehadiran] = useState(0);
+  const router = useRouter()
+  const [namaKegiatan, setNamaKegiatan] = useState('')
+  const [waktuKegiatan, setWaktuKegiatan] = useState('')
+  const [kelasX, setKelasX] = useState(false)
+  const [kelasXI, setKelasXI] = useState(false)
+  const [kelasXII, setKelasXII] = useState(false)
+  const [jumlahKehadiran, setJumlahKehadiran] = useState(0)
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     const response = await fetch('http://localhost:8000/api/kegiatan/add', {
       method: 'POST',
@@ -30,16 +30,16 @@ const FormTambah = () => {
         kelas_xii: kelasXII ? 1 : 0,
         jumlah_kehadiran: jumlahKehadiran,
       }),
-    });
+    })
 
     if (response.ok) {
-      console.log('Data berhasil ditambahkan');
-      toast.success('Data berhasil ditambahkan');
-      router.push('/dashboard'); 
+      console.log('Data berhasil ditambahkan')
+      toast.success('Data berhasil ditambahkan')
+      router.push('/dashboard') 
     } else {
-      console.error('Gagal menambahkan data');
+      console.error('Gagal menambahkan data')
     }
-  };
+  }
 
   return (
     <div className='lg:col-span-2'>
@@ -117,7 +117,7 @@ const FormTambah = () => {
       </form>
       <ToastContainer />
     </div>
-  );
-};
+  )
+}
 
-export default FormTambah;
+export default FormTambah
