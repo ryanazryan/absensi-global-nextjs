@@ -42,26 +42,36 @@ const KehadiranPage = ({ selectedKegiatan }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
+        // Log the selected option
+        console.log(selectedOption);
+    
+        // Validate that an option is selected
+        if (!selectedOption) {
+            console.error('No kegiatan selected.');
+            return;
+        }
+    
         try {
             const formData = new FormData();
-            formData.append('id_kegiatan', selectedOption?.id || '');
+            formData.append('id_kegiatan', selectedOption?.value || ''); // Use .value to get the id
             formData.append('nis', nis);
             formData.append('bukti', bukti);
-
+    
             const response = await axios.post('http://localhost:8000/api/kehadiran/add', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'application/json',
                 },
             });
-
+    
             console.log(response.data);
-
+    
             router.push('/kegiatan');
         } catch (error) {
             console.error(error);
         }
     };
+    
 
     if (loading) {
         return (
@@ -80,7 +90,7 @@ const KehadiranPage = ({ selectedKegiatan }) => {
             <form onSubmit={handleSubmit}>
                 <div className='grid gap-2 gap-y-2 text-sm grid-cols-1 md:grid-cols-5 my-6 mx-2 md:mx-10 px-4 md:px-10 py-10 shadow-lg bg-white'>
                     <div className='md:col-span-5'>
-                    <h1 className='text-lg font-semibold mb-10 text-center '>Tambah Data Kehadiran</h1>
+                        <h1 className='text-lg font-semibold mb-10 text-center '>Tambah Data Kehadiran</h1>
                         <label htmlFor='id_kegiatan'>Kegiatan:</label>
                         <Select
                             defaultValue={selectedOption}
@@ -90,6 +100,7 @@ const KehadiranPage = ({ selectedKegiatan }) => {
                                 value: kegiatan.id,
                                 label: kegiatan.nama_kegiatan,
                             }))}
+
                             placeholder='Pilih Kegiatan'
                         />
                     </div>

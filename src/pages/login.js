@@ -29,25 +29,33 @@ const Login = () => {
 
         setIsLoading(true)
 
-        login({
-            email,
-            password,
-            remember: shouldRemember,
-            setErrors,
-            setStatus,
-        })
-            .then(() => {
-                if (user && user.role_id === 1) {
+        try {
+            await login({
+                email,
+                password,
+                remember: shouldRemember,
+                setStatus,
+            })
+
+            // Login sukses, lakukan pengecekan role
+            const user = getUserFromLocalStorage() // Anda mungkin perlu mengganti ini dengan implementasi yang sesuai
+            if (user) {
+                if (user.role_id === 1) {
                     router.push('/dashboard')
-                } else if (user && user.role_id === 2) {
+                } else if (user.role_id === 2) {
                     router.push('/siswa')
                 }
-            })
-            .catch((error) => {
-                console.error('Login failed:', error)
-            })
-    }
+            }
+        } catch (error) {
+            console.error('Login failed:', error)
 
+            if (error.message && error.message.toLowerCase().includes('email atau kata sandi salah')) {
+                setErrors(['Email atau kata sandi salah.'])
+            }
+        } finally {
+            setIsLoading(false)
+        }
+    }
     return (
         <GuestLayout>
             <motion.section className="h-screen flex">

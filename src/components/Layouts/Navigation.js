@@ -38,7 +38,7 @@ const Navigation = ({ user }) => {
                                         <p>Siswa</p>
                                     </NavLink>
                                     <NavLink href="/bukti" active={router.pathname === '/bukti'}>
-                                        <p>Bukti Kehadiran</p>
+                                        <p>Kehadiran</p>
                                     </NavLink>
                                 </>
                             )}
@@ -85,7 +85,6 @@ const Navigation = ({ user }) => {
                         </Dropdown>
                     </div>
 
-                    {/* Hamburger */}
                     <div className="-mr-2 flex items-center sm:hidden">
                         <button onClick={() => setOpen(open => !open)} className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                             <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -112,8 +111,8 @@ const Navigation = ({ user }) => {
                                 <ResponsiveNavLink href="/siswa" active={router.pathname === '/siswa'}>
                                     Siswa
                                 </ResponsiveNavLink>
-                                <ResponsiveNavLink href="/siswa" active={router.pathname === '/bukti'}>
-                                    Bukti Kehadiran
+                                <ResponsiveNavLink href="/bukti" active={router.pathname === '/bukti'}>
+                                    Kehadiran
                                 </ResponsiveNavLink>
                             </>
                         )}
