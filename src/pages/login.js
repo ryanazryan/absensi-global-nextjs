@@ -10,43 +10,43 @@ import { motion } from 'framer-motion'
 import Input from '@/components/Input'
 
 const Login = () => {
-    const router = useRouter()
+    const router = useRouter();
 
     const { login } = useAuth({
         middleware: 'guest',
         redirectIfAuthenticated: '/dashboard',
-    })
+    });
 
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [shouldRemember, setShouldRemember] = useState(false)
-    const [showPassword, setShowPassword] = useState(false)
-    const [errors, setErrors] = useState([])
-    const [status, setStatus] = useState(null)
-    const [user, setUser] = useState(null) 
-    const [isLoading, setIsLoading] = useState(false)
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [shouldRemember, setShouldRemember] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [errors, setErrors] = useState([]);
+    const [status, setStatus] = useState(null);
+    const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (status === 'success') {
-          Swal.fire({
-            icon: 'success',
-            title: 'Login Berhasil!',
-            showConfirmButton: false,
-            timer: 1500,
-          })
-    
-          if (user && user.role_id === 1) {
-            router.push('/dashboard')
-          } else if (user && user.role_id === 2) {
-            router.push('/siswa')
-          }
-        }
-      }, [status, user, router])
+            Swal.fire({
+                icon: 'success',
+                title: 'Login Berhasil!',
+                showConfirmButton: false,
+                timer: 1500,
+            });
 
-      const submitForm = async (event) => {
-        event.preventDefault()
+            if (user && user.role_id === 1) {
+                router.push('/dashboard');
+            } else if (user && user.role_id === 2) {
+                router.push('/siswa');
+            }
+        }
+    }, [status, user, router]);
+
+    const submitForm = async (event) => {
+        event.preventDefault();
     
-        setIsLoading(true)
+        setIsLoading(true);
     
         try {
             const user = await login({
@@ -55,24 +55,44 @@ const Login = () => {
                 remember: shouldRemember,
                 setErrors,
                 setStatus,
-            })
+            });
     
-            if (user && user.role_id === 1) {
-                router.push('/dashboard')
-            } else if (user && user.role_id === 2) {
-                router.push('/siswa')
+            if (user) {
+                // Show a success alert here
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Login Berhasil!',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+    
+                // Redirect based on user role
+                if (user.role_id === 1) {
+                    router.push('/dashboard');
+                } else if (user.role_id === 2) {
+                    router.push('/siswa');
+                }
             }
         } catch (error) {
-            console.error('Login failed:', error)
-        } finally {
-            setIsLoading(false)
-        }
-    }
+            Swal.fire({
+                icon: 'success',
+                title: 'Login Berhasil!',
+                showConfirmButton: false,
+                timer: 1500,
+            });
     
+            console.error('Login failed:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+
 
     return (
         <GuestLayout>
-            <motion.section className="h-screen flex">
+            <div className="h-screen flex">
+
                 <div className="hidden md:block md:w-[100%] bg-cover bg-center">
                     <Image src={bg} className="w-full h-full" alt="Background" />
                 </div>
@@ -163,7 +183,7 @@ const Login = () => {
                         </form>
                     </div>
                 </div>
-            </motion.section>
+            </div>
         </GuestLayout>
     )
 }

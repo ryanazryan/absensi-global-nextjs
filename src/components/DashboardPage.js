@@ -16,6 +16,7 @@ function DashboardPage() {
     const [selectedItem, setSelectedItem] = useState(null)
     const [searchTerm, setSearchTerm] = useState('')
     const [filteredKegiatan, setFilteredKegiatan] = useState([])
+    const [showLoginAlert, setShowLoginAlert] = useState(false);
 
     const [screenWidth, setScreenWidth] = useState(window.innerWidth)
 
@@ -50,11 +51,11 @@ function DashboardPage() {
 
     const handleDelete = (id) => {
         const apiUrl = `http://localhost:8000/api/kegiatan/${id}`
-    
+
         const requestOptions = {
             method: 'DELETE',
         }
-    
+
         fetch(apiUrl, requestOptions)
             .then(response => {
                 if (!response.ok) {
@@ -77,9 +78,9 @@ function DashboardPage() {
                 // Handle error, possibly display a message to the user
             })
     }
-    
-    
-    
+
+
+
 
 
     const handleEdit = (itemId) => {
@@ -136,6 +137,14 @@ function DashboardPage() {
     }
 
 
+    useEffect(() => {
+        const shouldShowLoginAlert = sessionStorage.getItem('showLoginAlert') === 'true';
+
+        if (shouldShowLoginAlert) {
+            setShowLoginAlert(true);
+            sessionStorage.removeItem('showLoginAlert'); // Clear the session storage
+        }
+    }, []);
 
     useEffect(() => {
         setLoading(true)
@@ -147,6 +156,14 @@ function DashboardPage() {
         if (laravelSessionCookie) {
             const token = laravelSessionCookie.split('=')[1]
             console.log(token) // Token autentikasi Sanctum
+            const isAuthenticated = true;
+
+            if (isAuthenticated) {
+                setIsLoggedIn(true);
+                setShowLoginAlert(true); // Display the login success alert
+
+                sessionStorage.setItem('showLoginAlert', 'true');
+            }
         }
 
         const fetchData = async () => {
@@ -190,6 +207,11 @@ function DashboardPage() {
     return (
 
         <section className="py-1">
+            {showLoginAlert && (
+                <div className="bg-green-500 text-white p-3 mb-3 rounded-md">
+                    Berhasil Login
+                </div>
+            )}
             <div className="w-full mb-12 xl:mb-0 px-4 mx-auto mt-5">
                 <div className='flex items-center'>
                     <LengthMenu totalEntries={filteredKegiatan.length} />

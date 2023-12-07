@@ -100,6 +100,7 @@ const FormEdit = () => {
                             id='waktu_kegiatan'
                             value={formData.waktu_kegiatan}
                             onChange={handleChange}
+                            name='waktu_kegiatan'
                         />
                     </div>
 
@@ -108,7 +109,7 @@ const FormEdit = () => {
                             <label htmlFor="kelasX">Kelas X</label>
                             <Checkbox
                                 id='kelasX'
-                                name='kelasX'
+                                name='kelas_x'
                                 checked={formData.kelas_x}
                                 onChange={handleChange}
                             />
@@ -117,7 +118,7 @@ const FormEdit = () => {
                             <label htmlFor="kelasXI">Kelas XI</label>
                             <Checkbox
                                 id='kelasXI'
-                                name='kelasXI'
+                                name='kelas_xi'
                                 checked={formData.kelas_xi}
                                 onChange={handleChange}
                             />
@@ -126,7 +127,7 @@ const FormEdit = () => {
                             <label htmlFor="kelasXII">Kelas XII</label>
                             <Checkbox
                                 id='kelasXII'
-                                name='kelasXII'
+                                name='kelas_xii'
                                 checked={formData.kelas_xii}
                                 onChange={handleChange}
                             />

@@ -42,34 +42,35 @@ const KehadiranPage = ({ selectedKegiatan }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-    
+
         console.log(selectedOption)
-    
+
         if (!selectedOption) {
             console.error('No kegiatan selected.')
             return
         }
-    
+
         try {
             const formData = new FormData()
-            formData.append('id_kegiatan', selectedOption?.value || '') 
+            formData.append('id_kegiatan', selectedOption?.value || '')
             formData.append('nis', nis)
             formData.append('bukti', bukti)
-    
+
             const response = await axios.post('http://localhost:8000/api/kehadiran/add', formData, {
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
             })
-    
+
+
             console.log(response.data)
-    
+
             router.push('/kegiatan')
         } catch (error) {
             console.error(error)
         }
     }
-    
+
 
     if (loading) {
         return (
