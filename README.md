@@ -1,4 +1,4 @@
-# Presensia - Student Attendance & Activity SaaS 🎓
+# Student Attendance & Activity SaaS 🎓
 
 Presensia is a modern **Education Technology (EdTech)** platform designed to streamline student attendance tracking and activity logging. Built as a decoupled Single Page Application (SPA) using **Next.js**, it ensures a fast, app-like experience for students and administrators.
 
